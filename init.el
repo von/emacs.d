@@ -23,6 +23,7 @@
 (setq my-lib-dir (concat home directory-sep-string "lib"))
 
 (setq my-emacs-config-dir (concat home
+				  directory-sep-string
 				  ".xemacs"
 				  directory-sep-string))
 (if (file-accessible-directory-p my-emacs-config-dir)

@@ -70,9 +70,6 @@
 ;; Where my aliases are
 (setq-default mail-abbrev-mailrc-file "~/Mail/mail_aliases")
 
-;; Load all my aliases
-(my-rebuild-mail-aliases)
-
 ;; Automatically delete messages after saving or archiving
 (setq-default vm-delete-after-archiving t)
 (setq-default vm-delete-after-saving t)
@@ -175,6 +172,8 @@
   (save-excursion
    (or (mail-position-on-field "CC" t)
        (mail-set-header "CC" "")))
+  ;; Load all my aliases
+  (my-rebuild-mail-aliases)
 )
 
 ;;(add-hook 'vm-mail-mode-hook 'my-vm-mail-mode-hook)

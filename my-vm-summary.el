@@ -24,98 +24,194 @@
 (require `vm-summary-hilit)
 
 ;;
+;; Make faces for vm-hiliting
+
+;; Spam
+(copy-face 'default 'summary-spam-face)
+(set-face-foreground 'summary-spam-face "DarkRed")
+(set-face-background 'summary-spam-face "DarkGrey")
+
+;; To me
+(copy-face 'default 'summary-me-face)
+
+;; From me
+(copy-face 'default 'summary-from-me-face)
+(set-face-foreground 'summary-from-me-face "grey")
+
+;; Non-critical mail lists
+(copy-face 'default 'summary-non-critical-face)
+(set-face-foreground 'summary-non-critical-face "DarkGreen")
+(set-face-background 'summary-non-critical-face "DarkGrey")
+
+;; Interesting mail lists
+(copy-face 'default 'summary-interesting-face)
+(set-face-foreground 'summary-interesting-face "red")
+
+;; Low-interest mail lists
+(copy-face 'default 'summary-low-interest-face)
+(set-face-foreground 'summary-low-interest-face "DarkGreen")
+(set-face-background 'summary-low-interest-face "DarkGrey")
+
+;; DSL Email
+(copy-face 'default 'summary-dsl-face)
+(set-face-foreground 'summary-dsl-face "pink")
+
+;; DOESG Email
+(copy-face 'default 'summary-doesg-face)
+t(set-face-foreground 'summary-doesg-face "#FF00FF")
+
+;; Management email
+(copy-face 'default 'summary-management-face)
+(set-face-foreground 'summary-management-face "orange")
+
+;; High-interest Globus lists
+(copy-face 'default 'summary-high-interest-globus-face)
+(set-face-foreground 'summary-high-interest-globus-face "blue")
+
+;; General Globus lists
+(copy-face 'default 'summary-globus-face)
+(set-face-foreground 'summary-globus-face "DarkGreen")
+(set-face-background 'summary-globus-face "DarkGrey")
+
+;; High-interest GGF lists
+(copy-face 'default 'summary-high-interest-ggf-face)
+(set-face-foreground 'summary-high-interest-ggf-face "green")
+
+;; General GGF lists
+(copy-face 'default 'summary-ggf-face)
+(set-face-foreground 'summary-ggf-face "DarkGreen")
+(set-face-background 'summary-ggf-face "DarkGrey")
+
+;;
 ;; First match in list below takes precedence
 ;; Note that the header regex requires parens - e.g. (To:|Cc:)
 ;;
 (setq vm-summary-hilit-alist
       '(
+	;;
+	;; Catch Spam
+	("X-Spam-Flag:"
+	 ("YES" . summary-spam-face)
+	 )
+	;; Catch stuff to me
+	("\\(To\\|CC\\|Cc\\|cc\\):"
+	 ("welch@mcs.anl.gov" . summary-me-face)
+	 )
+	;; Stuff from me
 	("From:"
-	 ("welch@mcs.anl.gov" . "grey")
+	 ("welch@mcs.anl.gov" . summary-from-me-face)
+	 ("vwelch@ncsa.uiuc.edu" . summary-from-me-face)
+	 ("von@vwelch.com" . summary-from-me-face)
+	 )
+	("Subject:"
+	 ;; Catch stuff about proxy certificates
+	 ("proxy" . summary-me-face)
 	 )
 	("Sender:"
 	 ;;
 	 ;; Essentially me
-	 ("owner-security-internal@globus.org" . "white")
-	 ;;
-	 ;; ESG
-	 ("esg-admin@earthsystemgrid.org" . "#A01010")
-	 ;;
-	 ;; Misc ANL/UC
-	 ("\\(cs-admin\\|staff-admin\\)@cs.uchicago.edu\\|\\(owner-mcs\\|owner-camp-seminars\\|owner-seminars\\|owner-disc\\|owner-unix-users\\)@mcs.anl.gov\\|owner-argonne-today@achilles.ctd.anl.gov" . "#A01010")
-	 ;;
-	 ;; PPDG
-	 ("\\(ppdg-admin\\|ppdg-jdl-admin\\)@ppdg.net" . "#A01010")
-	 ("ppdg-siteaa-admin@ppdg.net\\|ppdg-cara-admin@ppdg.net" . "red")
-	 ;;
-	 ;; NMI
-	 ("owner-team@grids-center.org" . "DarkRed")
-	 ;;
-	 ;; IETF
-	 ("owner-ietf-pkix@mail.imc.org" . "#A01010")
-	 ("owner-ietf-krb-wg@achilles.ctd.anl.gov\\|owner-aaaarch@fokus.gmd.de\\|owner-ietf-sacred@mail.imc.org\\|cfrg-admin@ietf.org" . "DarkRed")
-	 ;;
-	 ;; Internet2
-	 ("owner-mace@internet2.edu\\|owner-hepki-tag@internet2.edu\\|owner-mace-opensaml-users@internet2.edu\\|owner-mw-announce@internet2.edu" . "DarkRed")
-	 ;;
-	 ;; Misc
-	 ("owner-wu-ftpd@wugate.wustl.edu" . "DarkRed")
-	 ("owner-access-online@ncsa.uiuc.edu" . "DarkRed")
-	 ("lap-interest-owner@projectliberty.org" . "DarkRed")
-	 ;;
-	 ;; High-interest misc lists
-	 ("owner-announce@cs.uiuc.edu\\|owner-cryptography@wasabisystems.com\\|owner-cryptography@metzdowd.com" . "red")
-	 ;;
-	 ;; DSL
-	 ("owner-dsl@mcs.anl.gov\\|owner-dsl-core@mcs.anl.gov\\|owner-dsl-uc@mcs.anl.gov\\|dsl-admin@cs.uchicago.edu" . "pink")
-	 ;;
-	 ;; DOESG
-	 ("owner-doe-\\(sg\\|pma\\|ca\\)@george.lbl.gov" . "#FF00FF")
+	 ("owner-security-internal@globus.org" . summary-me-face)
 	 ;;
 	 ;; Management lists
-	 ("owner-management@globus.org\\|owner-dsl-management@mcs.anl.gov\\|owner-ogsa-management@globus.org\\|owner-globus-ogsa-management@globus.org\\|owner-dsl-project-leaders@mcs.anl.gov" . "orange")
+	 ("owner-management@globus.org\\|owner-dsl-management@mcs.anl.gov\\|owner-ogsa-management@globus.org\\|owner-globus-ogsa-management@globus.org\\|owner-dsl-project-leaders@mcs.anl.gov" . summary-management-face)
+	 ;;
+	 ;; ESG
+	 ("esg-admin@earthsystemgrid.org" . summary-non-critical-face)
+	 ;;
+	 ;; Misc ANL/UC
+	 ("mcs.anl.gov\\|owner-argonne-today@achilles.ctd.anl.gov\\|lcrc.anl.gov" . summary-non-critical-face)
+	 ;;
+	 ;; PPDG
+	 ("\\(ppdg-admin\\|ppdg-jdl-admin\\)@.*ppdg.net" . summary-non-critical-face)
+	 ("ppdg-siteaa-admin@ppdg.net\\|ppdg-cara-admin@ppdg.net" . summary-interesting-face)
+	 ;;
+	 ;; NMI
+	 ("owner-team@grids-center.org" . summary-low-interest-face)
+	 ;;
+	 ;; IETF
+	 ("owner-ietf-pkix@mail.imc.org" . summary-non-critical-face)
+	 ("owner-ietf-krb-wg@achilles.ctd.anl.gov\\|owner-aaaarch@fokus.gmd.de\\|owner-ietf-sacred@mail.imc.org\\|cfrg-admin@ietf.org" . summary-low-interest-face)
+	 ;;
+	 ;; Internet2
+	 ("internet2.edu" . summary-low-interest-face)
+	 ;;
+	 ;; Misc
+	 ("owner-wu-ftpd@wugate.wustl.edu" . summary-low-interest-face)
+	 ("owner-access-online@ncsa.uiuc.edu" . summary-low-interest-face)
+	 ("projectliberty.org" . summary-low-interest-face)
+	 ("discuss-gnuradio" . summary-low-interest-face)
+	 ("owner-aaaarch@fokus.fraunhofer.de" . summary-low-interest-face)
+	 ;;
+	 ;; High-interest misc lists
+	 ("owner-announce@cs.uiuc.edu\\|owner-cryptography@wasabisystems.com\\|owner-cryptography@metzdowd.com\\|owner-ip@v2.listbox.com" . summary-interesting-face)
+	 ;;
+	 ;; DSL
+	 ("owner-dsl@mcs.anl.gov\\|owner-dsl-developers@mcs.anl.gov\\|owner-dsl-core@mcs.anl.gov\\|owner-dsl-uc@mcs.anl.gov\\|dsl-admin@cs.uchicago.edu\\|owner-dsl-uchicago-staff@mcs.anl.gov" . summary-dsl-face)
+	 ;;
+	 ;; DOESG
+	 ("owner-doe-\\(sg\\|pma\\|ca\\)@george.lbl.gov" . summary-doesg-face)
 	 ;;
 	 ;; High-interest Globus lists
-	 ("\\(owner-python-discuss\\|owner-developers\\|owner-developer-discuss\\|owner-ogsa-alpha\\|owner-ogsa-developers\\|owner-gt3-developers-internal\\|owner-gsi-openssh\\|owner-ogsa-security\\|owner-ogsa-discuss\\|owner-announce\\|owner-security-announce\\)@globus.org" . "blue")
+	 ("\\(owner-developers\\|owner-ogsa-developers\\|owner-gt3-developers-internal\\|owner-gsi-openssh\\|owner-ogsa-security\\|owner-ogsa-discuss\\|owner-announce\\|owner-security-announce\\|owner-cas-discuss\\)@globus.org" . summary-high-interest-globus-face)
 	 ;;
 	 ;; Other Globus lists
-	 ("globus.org" . "DarkBlue")
+	 ("globus.org" . summary-globus-face)
 	 ;;
 	 ;; GGF High-interest lists
-	 ("\\(owner-security-wg\\|owner-authz-wg\\|owner-ogsa-sec-wg\\)@gridforum.org" . "green")
+	 ("\\(owner-security-wg\\|owner-authz-wg\\|owner-ogsa-sec-wg\\|owner-ogsa-authz\\)@gridforum.org" . summary-high-interest-ggf-face)
 	 ;;
 	 ;; Other GGF lists
-	 ("gridforum.org\\|ggf-testscripts-admin@cs.uchicago.edu" . "DarkGreen")
+	 ("gridforum.org\\|ggf-testscripts-admin@cs.uchicago.edu" . summary-ggf-face)
+	 ("egrid@egrid.org" .summary-ggf-face)
+	 ;;
+	 ;; Emsl stuff
+	 ("owner-hpcs2-users@emsl.pnl.gov" . summary-low-interest-face)
 	 )
 	;;
-	;; Flagged Spam
-	("X-Spam-Flag:"
-	 ("YES" . "DarkRed")
+	;; A lot of spam seems to use my capitalized NCSA address
+	("To:"
+	 ("VWELCH@NCSA.UIUC.EDU" . summary-spam-face)
+	 )
+	;; Oasis stuff seems to use this header
+	("Delivered-To:"
+	 ("\\(was\\|security-services\\|xacml\\|saml-dev\\)@lists.oasis-open.org" . summary-interesting-face)
+	 ("lists.oasis-open.org" . summary-low-interest-face)
+	 )
+	;; And Shib stuff uses List-Id:
+	("List-Id:"
+	 ("shibboleth-\\(dev\\|announce\\).internet2.edu" . summary-interesting-face)
 	 )
 	;; This regex still doesn't work...
-	("\\(To:\\|Cc:\\|cc:\\)"
+	("\\(To\\|Cc\\|cc\\):"
 	 ;;
 	 ;; Stuff without Sender field
-	 ("lists.oasis-open.org" . "DarkRed")
+	 ("pma-discuss@gridpma.org" . summary-non-critical-face)
 	 ;;
 	 ;; Me
-	 ("welch@mcs.anl.gov" . "white")
+	 ("welch@mcs.anl.gov" . summary-me-face)
 	 )
 	;;
 	;; Maillist bounces
 	("To:"
-	 ("glbs-owner-security-announce@mcs.anl.gov" . "DarkRed")
+	 ("glbs-owner-" . summary-low-interest-face)
+	 ("\\(owner-cas-discuss\\|owner-security-announce\\|owner-gsi-openssh\\)@globus.org" . summary-low-interest-face)
+	 ("ogsa-authz-approval@gridforum.org" . summary-low-interest-face)
 	 )
 	;;
 	;; Catch approval requests
 	("Subject:"
-	 ("APPROVE" . "white")
+	 ("APPROVE" . summary-me-face)
 	 )
 	;;
 	;; Subscription messages
 	("From:"
-	 ("Majordomo@Globus.org" . "DarkRed")
+	 ("Majordomo@Globus.org" . summary-low-interest-face)
 	 )
-
+	;;
+	;; Perl stuff w/o sender field
+	("From:"
+	 ("elists-admin@oreillynet.com" . summary-low-interest-face)
+	 )
 	)
       )
 

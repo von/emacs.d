@@ -15,7 +15,7 @@
 
 (cond ((boundp 'merge-mail-aliases)
        ;; Now load mail aliases from ~/.mail_aliases
-       (merge-mail-aliases (concat (getenv "HOME") "/.mail_aliases"))
+       (merge-mail-aliases (concat (getenv "HOME") "/Mail/.mail_aliases"))
        ))
 
 (defun my-bbdb-after-change-hook (record)

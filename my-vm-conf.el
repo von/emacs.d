@@ -47,6 +47,7 @@
 	"ogsi-wg@gridforum.org"
 	"secres-leadership@ncsa.uiuc.edgu"
 	"security-wg@teragrid.org"
+	"otp@ncsa.uiuc.edu"
 	))
 
 (setq esmtpmail-send-it-by-alist

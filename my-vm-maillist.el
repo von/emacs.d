@@ -203,7 +203,6 @@
    t ;; Full path
    ".spool$" ;; Regex to match
    t ;; don't sort
-   t ;; files only
    )
 )
 

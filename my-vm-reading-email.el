@@ -60,16 +60,19 @@
 ;; Preload the highlight-headers package and fix up the fonts.
 ;; This is a hack, but I can't figure out any other functional
 ;; way to get the faces consistantly right.
-(require 'highlight-headers)
+(if is-xemacs
+    (progn
+      (require 'highlight-headers)
 
-(make-face-unbold 'message-headers)
-(set-face-foreground 'message-headers "green")
-
-(make-face-unbold 'message-header-contents)
-(copy-face 'default 'message-header-contents)
-
-(make-face-bold 'message-cited-text)
-(set-face-foreground 'message-cited-text "yellow")
+      (make-face-unbold 'message-headers)
+      (set-face-foreground 'message-headers "green")
+      
+      (make-face-unbold 'message-header-contents)
+      (copy-face 'default 'message-header-contents)
+      
+      (make-face-bold 'message-cited-text)
+      (set-face-foreground 'message-cited-text "yellow")
+      ))
 
 ;; Ulf Jasper font-lock package for VM
 (require 'u-vm-color)

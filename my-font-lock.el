@@ -32,7 +32,6 @@
       )
 
 ;;; Set colors and fonts
-;;; Assumption is that we're white on black
 ;;; Windows note: Windows craps out on some fonts if we don't copy them
 ;;;               first. *shrug*
 

@@ -27,5 +27,7 @@
 
 (add-hook 'bbdb-after-change-hook 'my-bbdb-after-change-hook)
 
-(add-menu-button '("Tools")
-		 ["BBDB Snarf Region" bbdb-snarf-region (region-active-p)])
+(if (fboundp 'add-menu-button)
+    (add-menu-button '("Tools")
+		     ["BBDB Snarf Region" bbdb-snarf-region (region-active-p)]))
+

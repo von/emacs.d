@@ -124,7 +124,7 @@
 	      )
 	    )
 	  )
-	 (directory-files feedmail-queue-draft-directory t nil t t)
+	 (directory-files feedmail-queue-draft-directory t nil t)
 	 )
 	)
   )

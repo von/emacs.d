@@ -22,7 +22,7 @@
 
 ;; Use directory-file-name here to strip any trailing directory
 ;; separator
-(defvar home (directory-file-name (user-home-directory))
+(defvar home (directory-file-name (getenv "HOME"))
   "My home directory.")
 
 ;; Prepend load stuff...
@@ -32,7 +32,7 @@
 
 (setq my-emacs-config-dir (concat home
 				  directory-sep-string
-				  ".xemacs"
+				  "emacs-config"
 				  directory-sep-string))
 (if (file-accessible-directory-p my-emacs-config-dir)
      (setq load-path (cons my-emacs-config-dir load-path))
@@ -122,7 +122,8 @@
 (defun make-menubar-local()
   "Make the menubar of the current buffer local."
 
-  (set-buffer-menubar (copy-sequence current-menubar))
+  (if (fboundp 'set-buffer-menubar)
+      (set-buffer-menubar (copy-sequence current-menubar)))
 )
 
 (defun set-buffer-frame-title-format(format)
@@ -142,7 +143,7 @@
   (lambda (file)
     (load-file file)
     ))
- (directory-files my-emacs-config-dir t "^my-.*\.el$" nil t)
+ (directory-files my-emacs-config-dir t "^my-.*\.el$" nil)
 )
 
 ;; Don't indent all lines of paragraph like first
@@ -188,11 +189,13 @@
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'post-forward)
 
-;; Turn on permanent buffers
-(permanent-buffers-mode t)
+(if (boundp 'permanent-buffers-mode)
+    ;; Turn on permanent buffers
+    (permanent-buffers-mode t))
 
-;; Turn on paren highlighting
-(paren-set-mode 'paren)
+(if (boundp 'parsen-set-mode)
+    ;; Turn on paren highlighting
+    (paren-set-mode 'paren))
 
 ;; Make wsdl files invoke xml mode
 (setq auto-mode-alist
@@ -238,6 +241,15 @@
       ;;	    (append '("regex")
       ;;		    completion-regexp-list))
       ))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Mac OS X
+;;
+
+;; Does this do anything?
+(setq mac-command-key-is-meta t)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

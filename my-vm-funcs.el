@@ -162,7 +162,7 @@ A value of nil indicates that no limit should be set."
   "Is there mail queued to be sent?"
 
   (< 0 (length
-	(directory-files feedmail-queue-directory t nil t t)))
+	(directory-files feedmail-queue-directory t nil t)))
 )
 
 

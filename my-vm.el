@@ -11,6 +11,7 @@
 (require 'my-vm-reading-email)
 (require 'my-vm-summary)
 (require 'my-vm-multi-from)
+(require 'vm-rfaddons)
 
 ;; Need to load this so variables will be present for menus
 (require 'smtpmail)
@@ -204,6 +205,8 @@
 (defun my-vm-menu-setup-hook ()
   "My vm-menu-setup-hook"
 
+  (if modify-menu
+      (progn
 ;  (add-submenu '("Send")
 ;	       '("Queuing..."
 ;		 ["Send directly" (setq smtpmail-queue-mail nil)
@@ -218,39 +221,41 @@
 ;		 ["Send queued mail"
 ;		  smtpmail-send-queued-mail (smtpmail-queued)])
 
-  (add-menu-button '("Send")
-		 ["Send queued mail"
-		  feedmail-run-the-queue (feedmail-mail-in-queue)])
+	(add-menu-button '("Send")
+			 ["Send queued mail"
+			  feedmail-run-the-queue (feedmail-mail-in-queue)])
 
-  (add-submenu '("Send")
-	       '("Forwarding Encapsulation..."
-		 ["None" (setq vm-forwarding-digest-type nil)
-		  :style radio
-		  :selected (eq vm-forwarding-digest-type nil)]
-		 ["Mime" (setq vm-forwarding-digest-type "mime")
-		  :style radio
-		  :selected (string-equal vm-forwarding-digest-type "mime")]
-		 ))
+	(add-submenu '("Send")
+		     '("Forwarding Encapsulation..."
+		       ["None" (setq vm-forwarding-digest-type nil)
+			:style radio
+			:selected (eq vm-forwarding-digest-type nil)]
+		       ["Mime" (setq vm-forwarding-digest-type "mime")
+			:style radio
+			:selected (string-equal vm-forwarding-digest-type "mime")]
+		       ))
+	
+	(add-submenu '("Send")
+		     '("Bandwidth mode"
+		       ["Low" (vm-set-bandwidth-mode "low")
+			:style radio
+			:selected (string-equal "low"
+						vm-bandwidth-mode)]
+		       ["High" (vm-set-bandwidth-mode "high")
+			:style radio
+			:selected (string-equal "high"
+						vm-bandwidth-mode)]
+		       )
+		     )
 
-  (add-submenu '("Send")
-	       '("Bandwidth mode"
-		 ["Low" (vm-set-bandwidth-mode "low")
-		  :style radio
-		  :selected (string-equal "low"
-			     vm-bandwidth-mode)]
-		 ["High" (vm-set-bandwidth-mode "high")
-		  :style radio
-		  :selected (string-equal "high"
-			     vm-bandwidth-mode)]
-		 )
-	       )
-
-  (add-menu-button '("Folder")
-		  ["Expunge IMAP Messages"
-		   vm-expunge-imap-messages t]
-		  "Expunge POP Messages")
-
-  ;;(vm-add-maillists-menu)
+	(add-menu-button '("Folder")
+			 ["Expunge IMAP Messages"
+			  vm-expunge-imap-messages t]
+			 "Expunge POP Messages")
+	
+	;;(vm-add-maillists-menu)
+	)
+    )
 )
 
 (defun my-vm-add-virtual-key-bindings ()
@@ -341,7 +346,7 @@ Intended for compose mode."
 	      )
 	    )
 	  )
-	 (directory-files my-sig-dir t nil t t)
+	 (directory-files my-sig-dir t nil t)
 	 )
 	)
   )

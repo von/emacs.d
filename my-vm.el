@@ -55,6 +55,10 @@
 ;; Auto-center summary?
 (setq-default vm-auto-center-summary nil)
 
+;; Prefix to ignore on message subjects when comparing
+;; Modified to ignore "[list]" - doesn't work yet
+;;(setq vm-subject-ignored-prefix "^\\(re: *\\|fwd: *\\|\\[.*\\] *\\)+")
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; BBDB support
@@ -128,6 +132,14 @@
 				   (and (not (deleted))
 					(or (unread) (new)))))
 
+		("New and Unread and to Me"
+		 (("mbox")
+		  (and (not (deleted))
+		       (or (unread) (new))
+		       (recipient "welch@mcs.anl.gov")
+		       )))
+
+
 		("New" (("mbox") (and (not (deleted))
 				      (new))))
 
@@ -137,6 +149,13 @@
 		 (("mbox") (author "tuecke@mcs.anl.gov")))
 		("From Ian"
 		 (("mbox") (author "foster@mcs.anl.gov")))
+		("From Frank"
+		 (("mbox") (author "franks@mcs.anl.gov")))
+
+		("To be printed"
+		 (("mbox") (label "print")))
+		("To be read"
+		 (("mbox") (label "read")))
 
 		("SPAM"
 		 (("mbox") (header "X-Spam-Flag: YES")))
@@ -237,7 +256,12 @@
 			     vm-bandwidth-mode)]
 		 )
 	       )
-		  
+
+  (add-menu-button '("Folder")
+		  ["Expunge IMAP Messages"
+		   vm-expunge-imap-messages t]
+		  "Expunge POP Messages")
+
   ;;(vm-add-maillists-menu)
 )
 
@@ -347,70 +371,74 @@ Intended for compose mode."
 
 (require `vm-summary-hilit)
 
+;;
+;; First match in list below takes precedence
+;; Note that the header regex requires parens - e.g. (To:|Cc:)
+;;
 (setq vm-summary-hilit-alist
       '(
 	("From:"
 	 ("welch@mcs.anl.gov" . "grey")
 	 )
 	("Sender:"
-	 ;; Misc lists
-	 ("esg-admin@earthsystemgrid.org" . "DarkRed")
-	 ("cs-admin@cs.uchicago.edu" . "DarkRed")
-	 ("ppdg-admin@ppdg.net" . "DarkRed")
-	 ("owner-seminars@mcs.anl.gov" . "DarkRed")
-	 ("owner-disc@mcs.anl.gov" . "DarkRed")
-	 ("owner-team@grids-center.org" . "DarkRed")
-	 ("owner-ietf-krb-wg@achilles.ctd.anl.gov" . "DarkRed")
-	 ("owner-mace@internet2.edu" . "DarkRed")
-	 ("owner-hepki-tag@internet2.edu" . "DarkRed")
-	 ("owner-mcs@mcs.anl.gov" . "DarkRed")
-	 ("owner-wu-ftpd@wugate.wustl.edu" . "DarkRed")
-	 ("owner-ietf-pkix@mail.imc.org" . "DarkRed")
-	 ("owner-ietf-sacred@mail.imc.org" . "DarkRed")
-	 ("cfrg-admin@ietf.org" . "DarkRed")
-	 ("owner-access-online@ncsa.uiuc.edu" . "DarkRed")
-	 ;; High-interest misc lists
-	 ("owner-announce@cs.uiuc.edu" . "red")
-	 ("owner-dsl@mcs.anl.gov" . "red")
-	 ("owner-dsl-core@mcs.anl.gov" . "red")
-	 ("owner-dsl-uc@mcs.anl.gov" . "red")
-	 ("dsl-admin@cs.uchicago.edu" . "red")
-	 ("ppdg-siteaa-admin@ppdg.net" . "red")
-	 ("ppdg-cara-admin@ppdg.net" . "red")
-	 ("owner-doe-sg@george.lbl.gov" . "red")
-	 ;; Globus lists
-	 ("owner-discuss@globus.org" . "DarkBlue")
-	 ("owner-java@globus.org" . "DarkBlue")
-	 ("owner-cray@globus.org" . "DarkBlue")
-	 ("owner-mpich-g@globus.org" . "DarkBlue")
-	 ("owner-webservices-internal@globus.org" . "DarkBlue")
-	 ("owner-windows@globus.org" . "DarkBlue")
-	 ("owner-mds@globus.org" . "DarkBlue")
-	 ;; High-interest Globus lists
-	 ("owner-python-discuss@globus.org" . "blue")
-	 ("owner-developers@globus.org" . "blue")
-	 ("owner-developer-discuss@globus.org" . "blue")
-	 ("owner-ogsa-alpha@globus.org" . "blue")
-	 ("owner-ogsa-developers@globus.org" . "blue")
-	 ("owner-gt3-developers-internal@globus.org" . "blue")
-	 ("owner-gsi-openssh@globus.org" . "blue")
-	 ;; Management lists
-	 ("owner-dsl-management@mcs.anl.gov" . "orange")
-	 ("owner-ogsa-management@globus.org" . "orange")
-	 ("owner-globus-ogsa-management@globus.org" . "orange")
-	 ;; GGF
-	 ("owner-security-wg@gridforum.org" . "green")
-	 ("owner-ogsi-wg@gridforum.org" . "green")
-	 ("owner-ogsa-security@globus.org" . "green")
-	 ("gridforum.org" . "DarkGreen")
-	 ("ggf-testscripts-admin@cs.uchicago.edu" . "DarkGreen")
+	 ;;
 	 ;; Essentially me
 	 ("owner-security-internal@globus.org" . "white")
+	 ;;
+	 ;; ESG
+	 ("esg-admin@earthsystemgrid.org" . "DarkRed")
+	 ;;
+	 ;; Misc ANL/UC
+	 ("\\(cs-admin\\|staff-admin\\)@cs.uchicago.edu\\|\\(owner-mcs\\|owner-camp-seminars\\|owner-seminars\\|owner-disc\\|owner-unix-users\\)@mcs.anl.gov\\|owner-argonne-today@achilles.ctd.anl.gov" . "DarkRed")
+	 ;;
+	 ;; PPDG
+	 ("\\(ppdg-admin\\|ppdg-jdl-admin\\)@ppdg.net" . "DarkRed")
+	 ("ppdg-siteaa-admin@ppdg.net\\|ppdg-cara-admin@ppdg.net" . "red")
+	 ;;
+	 ;; NMI
+	 ("owner-team@grids-center.org" . "DarkRed")
+	 ;;
+	 ;; IETF
+	 ("owner-ietf-krb-wg@achilles.ctd.anl.gov\\|owner-aaaarch@fokus.gmd.de\\|owner-ietf-pkix@mail.imc.org\\|owner-ietf-sacred@mail.imc.org\\|cfrg-admin@ietf.org" . "DarkRed")
+	 ;;
+	 ;; Internet2
+	 ("owner-mace@internet2.edu\\|owner-hepki-tag@internet2.edu\\|owner-mace-opensaml-users@internet2.edu\\|owner-mw-announce@internet2.edu" . "DarkRed")
+	 ;;
+	 ;; Misc
+	 ("owner-wu-ftpd@wugate.wustl.edu" . "DarkRed")
+	 ("owner-access-online@ncsa.uiuc.edu" . "DarkRed")
+	 ;;
+	 ;; High-interest misc lists
+	 ("owner-announce@cs.uiuc.edu\\|owner-cryptography@wasabisystems.com" . "red")
+	 ;;
+	 ;; DSL
+	 ("owner-dsl@mcs.anl.gov\\|owner-dsl-core@mcs.anl.gov\\|owner-dsl-uc@mcs.anl.gov\\|dsl-admin@cs.uchicago.edu" . "red")
+	 ;;
+	 ;; DOESG
+	 ("owner-doe-\\(sg\\|pma\\|ca\\)@george.lbl.gov" . "#FF00FF")
+	 ;;
+	 ;; Management lists
+	 ("owner-dsl-management@mcs.anl.gov\\|owner-ogsa-management@globus.org\\|owner-globus-ogsa-management@globus.org" . "orange")
+	 ;;
+	 ;; High-interest Globus lists
+	 ("\\(owner-python-discuss\\|owner-developers\\|owner-developer-discuss\\|owner-ogsa-alpha\\|owner-ogsa-developers\\|owner-gt3-developers-internal\\|owner-gsi-openssh\\|owner-ogsa-security\\|owner-ogsa-discuss\\)@globus.org" . "blue")
+	 ;;
+	 ;; Other Globus lists
+	 ("globus.org" . "DarkBlue")
+	 ;;
+	 ;; GGF High-interest lists
+	 ("\\(owner-security-wg\\|owner-ogsi-wg\\|owner-ogsa-sec-wg\\)@gridforum.org" . "green")
+	 ;;
+	 ;; Other GGF lists
+	 ("gridforum.org\\|ggf-testscripts-admin@cs.uchicago.edu" . "DarkGreen")
 	 )
-	("To:\\|Cc:\\cc:"
+	;; This regex still doesn't work...
+	("\\(To:\\|Cc:\\|cc:\\)"
+	 ;;
+	 ;; Stuff without Sender field
 	 ("lists.oasis-open.org" . "DarkRed")
-	 ("doe-sg-pma@george.lbl.gov" . "red")
-	 ("doe-sg-ca@george.lbl.gov" . "red")
+	 ;;
+	 ;; Me
 	 ("welch@mcs.anl.gov" . "white")
 	 )
 	)

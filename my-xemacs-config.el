@@ -10,9 +10,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Start gnuserv if available
-(if (not is-ms-windows)
-    (gnuserv-start)
-  )
+(gnuserv-start)
 
 ;; Load pending-del if present
 ;; XXX - What does this do anyways?
@@ -167,5 +165,25 @@
 ;; Make grep buffer appear in current window (otherwise if it's
 ;; displayed elsewhere already we may not see it)
 (add-to-list 'same-window-buffer-names "*grep*")
+
+
+(if is-xemacs
+    ;;
+    ;; GNU Emacs has this and Xemacs apparently doesn't so define for Xemacs
+    ;; so I can use GNU Emacs gnuclient
+    (defun server-edit-files (list)
+      "Wrapper around gnuserv-edit-file for GNU Emacs Gnuclient compatability."
+      (gnuserv-edit-files '(mswindows) list)
+      )
+  )
+
+(if is-xemacs
+  (defun server-edit-files-quickly (list)
+      "Wrapper around gnuserv-edit-file for GNU Emacs Gnuclient compatability."
+      (gnuserv-edit-files '(mswindows) list 'quick)
+      )
+  )
+
+(provide 'my-xemacs-config)
 
 ;; End XEmacs Stuff

@@ -2320,7 +2320,10 @@ mapped to mostly alphanumerics for safety."
   (let ((filename)
 		(is-fqm)
 		(is-in-this-dir)
-		(previous-buffer-file-name buffer-file-name))
+		(previous-buffer-file-name buffer-file-name)
+		;; So we don't spawn frames while saving
+		(vm-frame-per-composition nil)
+		)
 	(if buffer-file-name
 		(progn
 		  (setq is-fqm (feedmail-fqm-p buffer-file-name))

@@ -39,7 +39,7 @@
      ((looking-at "SPAM:") t)
      ;; Any sort of non-alphanumeric is probably not something we want to
      ;; fill (XXX better regex for this exists, I'm sure)
-     ((looking-at "[ \t]*[\+\*\|#]+") t)
+     ((looking-at "[ \t]*[\+\*\|#\[]+") t)
      ;; Else, return nil and fill
      )
     )

@@ -26,6 +26,7 @@
 		("\\.jpg$" . "image/jpeg")
 		("\\.ps$" . "application/postscript")
 		("\\.gif$" . "image/gif")
+		("\\.bmp$" . "image/bitmap")
 		))
 
 ;; Guess mime's type using filename and vm-mime-attachment-auto-type-alist
@@ -38,31 +39,38 @@
 (setq-default vm-mime-decode-for-preview nil)
 
 ;; Don't display these mime types myself
-;(setq-default vm-mime-internal-content-type-exceptions
-;	      '("text/html" "image/jpeg" "image/gif")
-;	      )
+;;(setq-default vm-mime-internal-content-type-exceptions
+;;	      '("text/html" "image/jpeg" "image/gif")
+;;	      )
 
 ;; Don't display these attachments automatically
-;(setq-default vm-auto-displayed-mime-content-type-exceptions
-;;            Eudora send stuff at HTML, so go ahead and display this
-;	      '("text/html")
-;	      )
+(setq-default vm-auto-displayed-mime-content-type-exceptions
+	      '("text/html")
+	      )
+
+;; Display plain text first if we have a choice...
+(setq-default vm-mime-alternative-select-method
+	      '(favorite
+		"text/plain"
+		))
 
 ;; Handle attachments
 (setq-default vm-mime-external-content-types-alist
       '(
 	;; Use OpenURL() instead of OpenFile so we can specifiy new-window
-	("text/html" 	                  "netscape" "-noraise" "-remote" "openURL(file:%f, new-window)")
-	("image/gif" 	                  "netscape" "-noraise" "-remote" "openURL(file:%f, new-window)")
-	("image/jpeg" 	                  "netscape" "-noraise" "-remote" "openURL(file:%f, new-window)")
+	;;("text/html" 	                  "netscape" "-noraise" "-remote" "openURL(file:%f, new-window)")
+	;;("image/gif" 	                  "netscape" "-noraise" "-remote" "openURL(file:%f, new-window)")
+	;;("image/jpeg" 	                  "netscape" "-noraise" "-remote" "openURL(file:%f, new-window)")
 	;;("image/gif" 	                  "xview")
 	;;("image/jpeg"	                  "xview")
-	("video/mpeg"                     "mpeg_play")
-	("video" 	                  "xanim")
+
 	;; Use mime_display for all applications
 	;; Windows workaround: exec explicitly with perl or the
 	;;                     script doesn't get it's arguments
-	("application"                    "perl c:\\utils\\mime_display.pl %t %f")
+	("application"              "perl c:\\utils\\mime_display.pl %t %f")
+	("video"                    "perl c:\\utils\\mime_display.pl %t %f")
+	("image"                    "perl c:\\utils\\mime_display.pl %t %f")
+	("text"                     "perl c:\\utils\\mime_display.pl %t %f")
 	)
       )
 

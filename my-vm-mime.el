@@ -39,9 +39,11 @@
 (setq-default vm-mime-decode-for-preview nil)
 
 ;; Don't display these mime types myself
-;;(setq-default vm-mime-internal-content-type-exceptions
-;;	      '("text/html" "image/jpeg" "image/gif")
-;;	      )
+(setq-default vm-mime-internal-content-type-exceptions
+	      '("text/html"
+		;;"image/jpeg" "image/gif"
+		)
+	      )
 
 ;; Don't display these attachments automatically
 (setq-default vm-auto-displayed-mime-content-type-exceptions

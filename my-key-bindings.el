@@ -72,6 +72,7 @@
 (cond (is-xemacs
 
        (global-set-key '(control /) 'undo)
+       (global-set-key '(control u) 'undo)
        (global-set-key '(meta right) 'scroll-other-window)
        (global-set-key '(meta down) 'scroll-other-window-one-line)
        (global-set-key '(meta left) 'scroll-other-window-down)

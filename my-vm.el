@@ -196,10 +196,9 @@
 ;		 ["Send queued mail"
 ;		  smtpmail-send-queued-mail (smtpmail-queued)])
 
-  ;; Nice to find a test here to see if I have queued mail
   (add-menu-button '("Send")
 		 ["Send queued mail"
-		  feedmail-run-the-queue t])
+		  feedmail-run-the-queue (feedmail-mail-in-queue)])
 
   (add-submenu '("Send")
 	       '("Forwarding Encapsulation..."

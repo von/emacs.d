@@ -151,4 +151,22 @@ A value of nil indicates that no limit should be set."
   (setq vm-forwarding-digest-type my-vm-save)
 )
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Feedmail functions
+;;
+
+(autoload 'feedmail-mail-in-queue "feedmail")
+
+(defun feedmail-mail-in-queue()
+  "Is there mail queued to be sent?"
+
+  (< 0 (length
+	(directory-files feedmail-queue-directory t nil t t)))
+)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (provide 'my-vm-funcs)

@@ -33,18 +33,20 @@
 ;; Guess mime's type using filename and vm-mime-attachment-auto-type-alist
 (setq-default vm-infer-mime-types t)
 
-;; Default place to save attachments
-(setq-default vm-mime-attachment-save-directory "~/My\ Documents/")
-
 ;; Don't decode messages when previewing them
 (setq-default vm-mime-decode-for-preview nil)
 
 ;; Don't display these mime types myself
 (setq-default vm-mime-internal-content-type-exceptions
-	      '("text/html"
-		;;"image/jpeg" "image/gif"
+	      '(
+		;;"text/html"
+		;;"image/jpeg"
+		;;"image/gif"
 		)
 	      )
+;;
+;; Use W3 for html
+(require 'w3)
 
 ;; Don't display these attachments automatically
 (setq-default vm-auto-displayed-mime-content-type-exceptions
@@ -61,7 +63,7 @@
 		))
 
 ;; Handle attachments
-(setq-default vm-mime-external-content-types-alist
+(setq-default vm-mime-external-content-types-alist 
       '(
 	;; Use OpenURL() instead of OpenFile so we can specifiy new-window
 	;;("text/html" 	                  "netscape" "-noraise" "-remote" "openURL(file:%f, new-window)")
@@ -70,13 +72,19 @@
 	;;("image/gif" 	                  "xview")
 	;;("image/jpeg"	                  "xview")
 
+	;; Windows:
 	;; Use mime_display for all applications
 	;; Windows workaround: exec explicitly with perl or the
 	;;                     script doesn't get it's arguments
-	("application"              "perl c:\\utils\\mime_display.pl %t %f")
-	("video"                    "perl c:\\utils\\mime_display.pl %t %f")
-	("image"                    "perl c:\\utils\\mime_display.pl %t %f")
-	("text"                     "perl c:\\utils\\mime_display.pl %t %f")
+	;;
+	;; Mac: Use open for everything
+	;;
+	;; Use explicit arg to force correct parsing of attachments
+	;; with spaces.
+	("application"       "open" "%f")
+	("video"             "open" "%f")
+	("image"             "open" "%f")
+	("text"              "open" "%f")
 	)
       )
 
@@ -111,6 +119,13 @@
 		("application/x-gzip" . "%-60.60(%d: %f%)")
 		("application/x-mspowerpoint" . "%-60.60(%d: %f%)")
 		))
+
+;;
+;; Use binary to mime encoding
+(setq vm-mime-base64-decoder-program "mmencode")
+(setq vm-mime-base64-decoder-switches '("-b" "-u"))
+(setq vm-mime-base64-encoder-program "mmencode")
+(setq vm-mime-base64-encoder-switches '("-b"))
 
 ;;
 ;; End Mime Configuration

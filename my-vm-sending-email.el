@@ -23,24 +23,11 @@
 ;; Headers not to forward
 (setq-default vm-unforwarded-header-regexp "\\(Return-Path:\\|Received:\\|X-\\|Message-Id:\\|In-Reply-To:\\|Mime-Version:\\|Content-Type:\\|Precedence:\\|Content-Disposition:\\|User-Agent:\\|Sender:\\|Organization:\\|References:\\|Content-Transfer-Encoding:\\|List-Help:\\|List-Post:\\|List-Subscribe:\\|List-Id:\\|List-Unsubscribe:\\|List-Archive:\\|Errors-To:\\Thread-Topic:\\Thread-Index:\\context-class:\\|Content-Class:\\|Thread-Topic:\\|thread-index:\\|Importance:\\)")
 
-;; Reply-to's to ignore
-(setq vm-reply-ignored-reply-tos 
-      '(
-	"ogsi-wg@gridforum.org"
-	"secres-leadership@ncsa.uiuc.edu"
-	))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Set up esmtpmail
 
 (setq esmtpmail-code-conv-from nil)
-
-(setq esmtpmail-send-it-by-alist
-      ;; (sender smtp-host)
-      '(("vwelch@ncsa.uiuc.edu" "smtp.ncsa.uiuc.edu")
-	("welch@mcs.anl.gov" "localhost")
-	))
 
 ;; provided by jam@austin.asc.slb.com (James A. McLaughlin);
 ;; simplified by WJC after more feedmail development;
@@ -132,10 +119,12 @@
 (defun feedmail-insert-draft-menu ()
   "Add a edit drafts menu to the Send menu."
 
-  (let ((menu (feedmail-generate-draft-menu)))
-    (add-submenu '("Send")
-		   menu
-		   )
+  (if modify-menu
+      (let ((menu (feedmail-generate-draft-menu)))
+	(add-submenu '("Send")
+		     menu
+		     )
+	)
     )
 )
 

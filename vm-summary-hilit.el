@@ -135,14 +135,21 @@ appearance of the color name in vm-summary-hilit-alist."
 	  (let ((a (car ah)))
 	    (if (string-match (car a) header)
 		(progn
-		  (set-extent-face (make-extent (+ (vm-su-start-of m) 1)
-						(- (vm-su-end-of m) 1)
-						vm-summary-buffer)
-				   (cdr a))
+		  (vm-summary-set-extent-face
+		   (make-extent (+ (vm-su-start-of m) 1)
+				(- (vm-su-end-of m) 1)
+				vm-summary-buffer)
+		   (cdr a))
 		  (setq ah nil al nil))))
 	  (setq ah (cdr ah))))
       (setq al (cdr al)))))
-    
+
+(defun vm-summary-set-extent-face (exerlay newface)
+  "Sets the face used by EXERLAY to NEWFACE."
+  (if vmpc-xemacs-p
+      (set-extent-face exerlay newface)
+    (overlay-put exerlay 'face newface)))
+ 
 (add-hook `vm-summary-redo-hook `vm-summary-hilit)
 (add-hook `vm-summary-update-hook `vm-summary-message-hilit)
 

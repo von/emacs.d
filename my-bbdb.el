@@ -13,8 +13,10 @@
 ;; Build all mail aliases now
 (bbdb-define-all-aliases)
 
-;; Now load mail aliases from ~/.mail_aliases
-(merge-mail-aliases (concat (getenv "HOME") "/.mail_aliases"))
+(cond ((boundp 'merge-mail-aliases)
+       ;; Now load mail aliases from ~/.mail_aliases
+       (merge-mail-aliases (concat (getenv "HOME") "/.mail_aliases"))
+       ))
 
 (defun my-bbdb-after-change-hook (record)
   "My hook to do stuff after I change a bbdb record."

@@ -1,5 +1,5 @@
 ;;
-;; my-lisp.edl
+;; my-lisp.ed
 ;;
 ;; $Id$
 ;;

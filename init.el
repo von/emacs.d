@@ -61,6 +61,8 @@
 (defvar is-x-windows (eq window-system 'x)
   "Are we running under X windows?")
 
+(defvar is-darwin (string= "darwin" (symbol-name system-type))
+  "Are we running under Darwin/Mac OS?")
 
 ;;; Older versions of emacs did not have these variables
 ;;; (emacs-major-version and emacs-minor-version.)
@@ -103,6 +105,8 @@
 (defvar modify-menu is-xemacs
 	"Should we modify the toolbar menus?")
 
+;; Don't do this under emacs until I get menubar localization fixed.
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Enable the commands `narrow-to-region' ("C-x n n") and 
@@ -122,6 +126,7 @@
 (defun make-menubar-local()
   "Make the menubar of the current buffer local."
 
+  ;; XXX Fix for Emacs
   (if (fboundp 'set-buffer-menubar)
       (set-buffer-menubar (copy-sequence current-menubar)))
 )
@@ -219,16 +224,10 @@
 ;;
 ;; Dictionary support
 
-;; Load support for dictionary lookups
-(autoload 'dictionary-search "dictionary"
-  "Ask for a word and search it in all dictionaries" t)
-(autoload 'dictionary-match-words "dictionary"
-  "Ask for a word and search all matching words in the dictionaries" t)
-(autoload 'dictionary "dictionary"
-  "Create a new dictionary buffer" t)
+(load "dictionary-init")
 
-(global-set-key [(control c) s] 'dictionary-search)
-(global-set-key [(control c) m] 'dictionary-match-words)
+(global-set-key "\C-cs" 'dictionary-search)
+(global-set-key "\C-cm" 'dictionary-match-words)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -250,9 +249,10 @@
 ;; Mac OS X
 ;;
 
-;; Does this do anything?
-(setq mac-command-key-is-meta t)
-
+(if is-darwin
+    ;; Does this do anything?
+    (setq mac-command-key-is-meta t)
+)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;

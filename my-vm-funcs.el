@@ -68,10 +68,12 @@ be overwritten if it already exists."
 
   (save-excursion
     (if (mail-position-on-field header t)
-	(if is-xemacs
+	;; Field already exists, kill it and leave us on empty line
+	(if (boundp 'backward-kill-line)
 	    (backward-kill-line)
-	  ;;(backward-kill-sentence)
+	  (kill-whole-line 0)
 	  )
+      ;; Field doesn't exist, put us on empty line after subject
       (progn
 	(mail-position-on-field "subject")
 	(insert "\n")))

@@ -23,6 +23,12 @@
 ;; Headers not to forward
 (setq-default vm-unforwarded-header-regexp "\\(Return-Path:\\|Received:\\|X-\\|Message-Id:\\|In-Reply-To:\\|Mime-Version:\\|Content-Type:\\|Precedence:\\|Content-Disposition:\\|User-Agent:\\|Sender:\\|Organization:\\|References:\\|Content-Transfer-Encoding:\\|List-Help:\\|List-Post:\\|List-Subscribe:\\|List-Id:\\|List-Unsubscribe:\\|List-Archive:\\|Errors-To:\\Thread-Topic:\\Thread-Index:\\context-class:\\|Content-Class:\\|Thread-Topic:\\|thread-index:\\|Importance:\\)")
 
+;; Reply-to's to ignore
+(setq vm-reply-ignored-reply-toms 
+      '(
+	"ogsi-wg@gridforum.org"
+	))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Feedmail
@@ -30,10 +36,7 @@
 ;; To undo the above
 ;;(setq send-mail-function 'smtpmail-send-it)
 
-(autoload 'feedmail-send-it "feedmail")
-(autoload 'feedmail-run-the-queue "feedmail")
-(autoload 'feedmail-run-the-queue-no-prompts "feedmail")
-(autoload 'feedmail-vm-mail-mode "feedmail")
+(require 'feedmail)
 
 ;;;
 ;;; If you plan to use the queue stuff, also use this:
@@ -54,6 +57,46 @@
 
 ;; Be quiet...
 (setq feedmail-queue-chatty nil)
+
+(add-hook 'vm-arrived-messages-hook 'feedmail-queue-reminder-medium)
+;;(add-hook 'vm-quit-hook 'feedmail-queue-reminder)
+
+
+(defun feedmail-generate-draft-menu ()
+  "Generate menu for insertion of draft messages."
+
+  (cons "Edit draft..."
+	(mapcar
+	 (function
+	  (lambda(draft-file)
+	    (let ((entry (vector
+			  (replace-in-string
+			   (file-name-nondirectory draft-file)
+			   (concat feedmail-queue-fqm-suffix "$")
+			   "")
+			  (list 'find-file draft-file))
+			 ))
+	      entry
+	      )
+	    )
+	  )
+	 (directory-files feedmail-queue-draft-directory t nil t t)
+	 )
+	)
+  )
+
+(defun feedmail-insert-draft-menu ()
+  "Add a edit drafts menu to the Send menu."
+
+  (let ((menu (feedmail-generate-draft-menu)))
+    (add-submenu '("Send")
+		   menu
+		   )
+    )
+)
+
+(add-hook 'vm-summary-mode-hook 'feedmail-insert-draft-menu)
+;; XXX How to update memu when draft added?
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;

@@ -10,9 +10,7 @@
 ;;
 (defvar mail-folder-compose-function-alist
   '(
-    ("^mcs/" setup-mcs-compose)
-    ("^vwelch.com/" setup-vwelch-com-compose)
-    ("^personal/" setup-vwelch-com-compose)
+    ("ncsa" setup-ncsa-compose)
     )
   "*Alist of regex, function pairs used by mail-folder-compose-function.
 When mail is composed from a folder matched a regex in
@@ -27,6 +25,10 @@ regex is run on the composition buffer.")
 (defun setup-vwelch-com-compose ()
   (mail-set-from "Von Welch <von@vwelch.com>")
   (mail-set-header "FCC" "~/Mail/vwelch.com/outbox")
+)
+
+(defun setup-ncsa-compose ()
+  (mail-set-from "Von Welch <vwelch@ncsa.uiuc.edu>")
 )
 
 (defun mail-folder-compose-function ()

@@ -10,6 +10,7 @@
 (require 'my-vm-sending-email)
 (require 'my-vm-reading-email)
 (require 'my-vm-summary)
+(require 'my-vm-multi-from)
 
 ;; Need to load this so variables will be present for menus
 (require 'smtpmail)
@@ -135,6 +136,22 @@
 
 		("SPAM"
 		 (("mbox") (header "X-Spam-Flag: YES")))
+		("Interesting People"
+		 (("mbox") (header "Sender: owner-ip@v2.listbox.com")))
+		("Cryptography"
+		 (("mbox") (header "Sender: owner-cryptography@metzdowd.com")))
+		("Globus Misc"
+		 (("mbox") (or (header "Sender: owner-discuss@globus.org")
+			       (header "Sender: owner-mpich-g@globus.org")
+			       (header "Sender: owner-developer-discuss@globus.org")
+			       ))
+		 ("GGF Misc"
+		  ("mbox"
+		   (or (header "Sender: owner-policy-wg@gridforum.org")
+		       (header "Sender: ogsa-wg@ggf.org")
+		       )))
+		 ("GGF Security"
+		  ("mbox" (header "Sender: owner-authz-wg@gridforum.org")))
 		)
 )
 

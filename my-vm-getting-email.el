@@ -9,6 +9,9 @@
 ;; How often to check for mail?
 (setq vm-mail-check-interval nil)
 
+;; Don't delete email when I get it
+(setq vm-imap-expunge-after-retrieving nil)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Message limit modes

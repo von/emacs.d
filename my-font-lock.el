@@ -43,6 +43,7 @@
        ;; Standard text
        (set-face-foreground 'default "white")
        (set-face-background 'default "black")
+       ;;(set-face-font 'default (make-font-specifier "Courier New:Regular:8::Western"))
        ;;
        ;; Modeline
        (set-face-foreground 'modeline "black")
@@ -116,6 +117,7 @@
        (add-hook 'dired-mode-hook	'turn-on-font-lock)
        (add-hook 'ada-mode-hook		'turn-on-font-lock)
        (add-hook 'java-mode-hook	'turn-on-font-lock)
+       (add-hook 'xml-mode-hook         'turn-on-font-lock)
       )
 )
 

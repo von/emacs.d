@@ -47,19 +47,15 @@ when we compose email from a specific folders."
   )
 )
 
-(defun mail-add-from-menu ()
-  "Add my From menu to the Mail menu. Intended for compose mode."
-
-  (add-submenu '("Mail")
-	       '("From"
-		 ["vwelch@ncsa.uiuc.edu"
-		  (mail-set-from "Von Welch <vwelch@ncsa.uiuc.edu>") t]
-		 ["welch@mcs.anl.gov"
-		  (setup-mcs-compose) t]
-		 ["von@vwelch.com"
-		  (setup-vwelch-com-compose) t]
-		 ))
-  )
-
+(easy-menu-define nil vm-mail-mode-map 
+  "Allow me to select my personality for sending email."
+  '("From"
+    ["vwelch@ncsa.uiuc.edu"
+     (mail-set-from "Von Welch <vwelch@ncsa.uiuc.edu>") t]
+    ["welch@mcs.anl.gov"
+     (setup-mcs-compose) t]
+    ["von@vwelch.com"
+     (setup-vwelch-com-compose) t]
+    ))
 
 (provide 'my-vm-multi-from)

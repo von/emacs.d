@@ -5,24 +5,16 @@
 ;; This file may be freely distributed, modified and used.
 
 (require 'font-lock)
+(require 'outline)
 
 (defvar vdiary-mode-map nil)
 
-(defvar vdiary-datestamp-sep "********************")
-
 (if vdiary-mode-map
     nil
-  (setq vdiary-mode-map (make-sparse-keymap))
+  (setq vdiary-mode-map outline-mode-map)
   (define-key vdiary-mode-map "\^cd" 'vdiary-insert-datestamp)
+  (define-key vdiary-mode-map "\^ce" 'vdiary-start-entry)
   )
-
-(defconst vdiary-font-lock-keywords
-  (list
-   ;; Highlight datestamp separator
-   (list (concat "^" (regexp-quote vdiary-datestamp-sep)) 0 'font-lock-keyword-face t)
-   )
-  )
-
 
 ;;;###autoload
 (defun vdiary-mode ()
@@ -32,11 +24,11 @@
   (interactive)
 
   (kill-all-local-variables)
+
+  (outline-mode)
+
   (use-local-map vdiary-mode-map)
 
-  (make-local-variable 'font-lock-defaults)
-  (setq font-lock-defaults '(vdiary-font-lock-keywords nil t))
-  (turn-on-font-lock)
   (goto-char (point-max))
 
   ;; Turn on auto-fill
@@ -49,15 +41,25 @@
   "Insert date string at current point."
 
   (interactive)
+  (goto-char (point-max))
   (let ((date-elements (split-string (current-time-string))))
     (insert (concat
-	     "\n" vdiary-datestamp-sep "\n"
+	     "\n"
+	     "* "
 	     (nth 0 date-elements) " " ;; Day of week
 	     (nth 1 date-elements) " " ;; Month
 	     (nth 2 date-elements) " " ;; Date
 	     (nth 4 date-elements) " " ;; Year
 	     "\n"))
     )
+)
+
+(defun vdiary-start-entry()
+  "Start adding new entry."
+
+  (interactive)
+  (goto-char (point-max))
+  (insert "\n" "** ")
 )
 
 (provide 'vdiary-mode)

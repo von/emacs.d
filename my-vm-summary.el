@@ -116,14 +116,14 @@ t(set-face-foreground 'summary-doesg-face "#FF00FF")
 	 ("owner-management@globus.org\\|owner-dsl-management@mcs.anl.gov\\|owner-ogsa-management@globus.org\\|owner-globus-ogsa-management@globus.org\\|owner-dsl-project-leaders@mcs.anl.gov" . summary-management-face)
 	 ;;
 	 ;; ESG
-	 ("esg-admin@earthsystemgrid.org" . summary-non-critical-face)
+	 ("earthsystemgrid.org" . summary-non-critical-face)
 	 ;;
 	 ;; Misc ANL/UC
 	 ("mcs.anl.gov\\|owner-argonne-today@achilles.ctd.anl.gov\\|lcrc.anl.gov" . summary-non-critical-face)
 	 ;;
 	 ;; PPDG
-	 ("\\(ppdg-admin\\|ppdg-jdl-admin\\)@.*ppdg.net" . summary-non-critical-face)
 	 ("ppdg-siteaa-admin@ppdg.net\\|ppdg-cara-admin@ppdg.net" . summary-interesting-face)
+	 ("ppdg.net" . summary-non-critical-face)
 	 ;;
 	 ;; NMI
 	 ("owner-team@grids-center.org" . summary-low-interest-face)
@@ -152,13 +152,13 @@ t(set-face-foreground 'summary-doesg-face "#FF00FF")
 	 ("owner-doe-\\(sg\\|pma\\|ca\\)@george.lbl.gov" . summary-doesg-face)
 	 ;;
 	 ;; High-interest Globus lists
-	 ("\\(owner-developers\\|owner-ogsa-developers\\|owner-gt3-developers-internal\\|owner-gsi-openssh\\|owner-ogsa-security\\|owner-ogsa-discuss\\|owner-announce\\|owner-security-announce\\|owner-cas-discuss\\)@globus.org" . summary-high-interest-globus-face)
+	 ("\\(owner-developers\\|owner-ogsa-developers\\|owner-gt3-developers-internal\\|owner-gsi-openssh\\|owner-ogsa-security\\|owner-ogsa-discuss\\|owner-announce\\|owner-security-announce\\|owner-cas-discuss\\|perf\\|owner-board\\)@globus.org" . summary-high-interest-globus-face)
 	 ;;
 	 ;; Other Globus lists
 	 ("globus.org" . summary-globus-face)
 	 ;;
 	 ;; GGF High-interest lists
-	 ("\\(owner-security-wg\\|owner-authz-wg\\|owner-ogsa-sec-wg\\|owner-ogsa-authz\\)@gridforum.org" . summary-high-interest-ggf-face)
+	 ("\\(owner-security-wg\\|owner-authz-wg\\|owner-ogsa-sec-wg\\|owner-ogsa-authz\\|owner-arrg-rg\\|owner-security-area\\|owner-gf-chairs\\|owner-wg-all\\)@gridforum.org" . summary-high-interest-ggf-face)
 	 ;;
 	 ;; Other GGF lists
 	 ("gridforum.org\\|ggf-testscripts-admin@cs.uchicago.edu" . summary-ggf-face)
@@ -177,9 +177,12 @@ t(set-face-foreground 'summary-doesg-face "#FF00FF")
 	 ("\\(was\\|security-services\\|xacml\\|saml-dev\\)@lists.oasis-open.org" . summary-interesting-face)
 	 ("lists.oasis-open.org" . summary-low-interest-face)
 	 )
-	;; And Shib stuff uses List-Id:
+	;; And Internet2 uses List-Id:
 	("List-Id:"
 	 ("shibboleth-\\(dev\\|announce\\).internet2.edu" . summary-interesting-face)
+	 ("mace.internet2.edu" . summary-interesting-face)
+	 ("mw-e2ed-core.internet2.edu" . summary-interesting-face)
+	 ("internet2.edu" . summary-low-interest-face)
 	 )
 	;; This regex still doesn't work...
 	("\\(To\\|Cc\\|cc\\):"
@@ -195,7 +198,6 @@ t(set-face-foreground 'summary-doesg-face "#FF00FF")
 	("To:"
 	 ("glbs-owner-" . summary-low-interest-face)
 	 ("\\(owner-cas-discuss\\|owner-security-announce\\|owner-gsi-openssh\\)@globus.org" . summary-low-interest-face)
-	 ("ogsa-authz-approval@gridforum.org" . summary-low-interest-face)
 	 )
 	;;
 	;; Catch approval requests
@@ -205,7 +207,7 @@ t(set-face-foreground 'summary-doesg-face "#FF00FF")
 	;;
 	;; Subscription messages
 	("From:"
-	 ("Majordomo@Globus.org" . summary-low-interest-face)
+	 ("\\(Majordomo@Globus.org\\|Majordomo@gridforum.org\\)" . summary-low-interest-face)
 	 )
 	;;
 	;; Perl stuff w/o sender field

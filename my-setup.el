@@ -35,6 +35,8 @@
       ;; Diary pane
       (require 'vdiary-mode)
       (find-file (concat my-documents-dir "diary.txt"))
-      (message "Von's setup done")
       )
 )
+
+(message "Von's setup done")
+(provide 'my-setup)

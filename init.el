@@ -14,7 +14,9 @@
 ;;
 ;; Set up Emac's load path
 
-(defvar home (user-home-directory)
+;; Use directory-file-name here to strip any trailing directory
+;; separator
+(defvar home (directory-file-name (user-home-directory))
   "My home directory.")
 
 ;; Prepend load stuff...

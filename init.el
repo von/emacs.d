@@ -14,18 +14,22 @@
 ;;
 ;; Set up Emac's load path
 
-(defvar home (getenv "HOME")
+(defvar home (user-home-directory)
   "My home directory.")
 
 ;; Prepend load stuff...
-(setq my-lib-dir (concat home "/lib"))
+(setq directory-sep-string (char-to-string directory-sep-char))
 
-(setq my-emacs-config-dir (concat home "/.xemacs"))
+(setq my-lib-dir (concat home directory-sep-string "lib"))
+
+(setq my-emacs-config-dir (concat home
+				  ".xemacs"
+				  directory-sep-string))
 (if (file-accessible-directory-p my-emacs-config-dir)
      (setq load-path (cons my-emacs-config-dir load-path))
 )
 
-(setq my-lisp-dir (concat my-lib-dir "/lisp"))
+(setq my-lisp-dir (concat my-lib-dir directory-sep-string "lisp"))
 (if (file-accessible-directory-p my-lisp-dir)
    (setq load-path (cons my-lisp-dir load-path))
 )
@@ -127,7 +131,8 @@
 (mapcar
  (function
   (lambda (file)
-    (load-file file)))
+    (load-file file)
+    ))
  (directory-files my-emacs-config-dir t "^my-.*\.el$" nil t)
 )
 

@@ -14,6 +14,9 @@
 ;; of the current one
 (setq-default vm-auto-next-message nil)
 
+;; Message size limit for URLS scanning
+(setq-default vm-url-search-limit 100000)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Fill presentation buffers
@@ -25,12 +28,18 @@
   "Return nil if line should be filled, t otherwise. Use to avoid filling cited lines. Meant to be used a fill-paragraph-function."
 
   (save-excursion
+    ;; Use (backward-paragraph) instead?
     (beginning-of-line)
     (cond
      ;; Don't fill cited lines
      ((looking-at "[ \t]*>") t)
      ;; Don't fill <quote> and </quote>
      ((looking-at "[ \t]*</?quote>") t)
+     ;; Don't fill SPAM assassin header lines
+     ((looking-at "SPAM:") t)
+     ;; Any sort of non-alphanumeric is probably not something we want to
+     ;; fill (XXX better regex for this exists, I'm sure)
+     ((looking-at "[ \t]*[\+\*\|#]+") t)
      ;; Else, return nil and fill
      )
     )

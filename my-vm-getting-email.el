@@ -9,9 +9,38 @@
 ;; How often to check for mail?
 (setq vm-mail-check-interval nil)
 
-;; Maximum size of message before prompting
-(setq vm-pop-max-message-size 50000)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Message limit modes
+;;
 
+(defvar vm-low-bandwidth-message-limit 50000
+  "Limit of message to download when in low-bandwidth
+mode before prompting. A value of nil means no limit.")
+
+(defvar vm-high-bandwidth-message-limit nil
+  "Limit of message to download when in low-bandwidth
+mode before prompting. A value of nil means no limit.")
+
+;; XXX Can make this a enumeration?
+(defvar vm-bandwidth-mode "high"
+  "Current bandwifth mode. Should be either \"high\"
+or \"low\".")
+
+(defun vm-set-bandwidth-mode (mode)
+  "Set current bandwidth mode for downloading email.
+mode should be either \"high\" or \"low\"."
+
+  (setq vm-bandwidth-mode mode)
+  (if (string-equal mode "high")
+      (vm-set-max-message-download-size
+       vm-high-bandwidth-message-limit)
+    (vm-set-max-message-download-size
+     vm-low-bandwidth-message-limit))
+)
+
+(vm-set-bandwidth-mode "high")
+  
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Fetchmail stuff

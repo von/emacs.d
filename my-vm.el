@@ -9,6 +9,9 @@
 (require 'my-vm-getting-email)
 (require 'my-vm-sending-email)
 
+;; Need to load this so variables will be present for menus
+(require 'smtpmail)
+
 ;; Don't prompt me for my email address, it should be set
 (setq-default query-user-mail-address nil)
 
@@ -86,6 +89,9 @@
 ;; Where my aliases are
 (setq-default mail-abbrev-mailrc-file "~/Mail/mail_aliases")
 
+;; Load all my aliases
+(my-rebuild-mail-aliases)
+
 ;; Automatically delete messages after saving or archiving
 (setq-default vm-delete-after-archiving t)
 (setq-default vm-delete-after-saving t)
@@ -93,19 +99,13 @@
 ;; Set up default save locations
 (setq-default vm-auto-folder-alist
 	      '(
-		;; For sorting mbox
-		("^Subject:"
-		 ("myproxy" . "projects/myproxy")
+		("Sender:"
+		 ("owner-ogsi-wg@gridforum.org" . "ggf/ogsi")
+		 ("owner-wu-ftpd@wugate.wustl.edu" . "technologies/wuftpd")
+		 ;; Seems like can only use '*' in next regex and not '?'
+		 ("owner-xemacs\(-announce\)*@xemacs.org" . "technologies/xemacs")
 		 )
-
-		;; Personal
-		("^From:"
-		 ("Kent" . "personal/kent")
-		 ("jms@cs.nwu.edu" . "personal/jms")
-		 ;;("jms@mcs.anl.gov" . "personal/jms")
-		 ("smiths321@yahoo.com" . "personal/sue")
-		 )
-
+		
 		;; HPCWire and DSSTAR
 		("^From:"
 		 ("hpcnews@tgc.com" . "misc/hpc-wire")
@@ -113,99 +113,25 @@
 		 ("ds-star@tgc.com" . "misc/dsstar")
 		 )
 
-		;; Globus lists
-		("^Sender:"
-		 ("owner-announce@mcs.anl.gov" . "globus/announce")
-		 ("owner-developers@mcs.anl.gov" . "globus/developers")
-		 ("owner-security@mcs.anl.gov" . "globus/security")
-		 ("owner-discuss@mcs.anl.gov" . "globus/discuss")
-		 ("owner-cray@mcs.anl.gov" . "globus/cray")
-		 )
-		("^To:"
-		 ;; No sender field for support email
-		 ("\(support\|bugs\|globus-req\|globusreq\)@\(.*globus.org\|.*mcs.anl.gov\)" . "globus/support")
-		 )
-
-		;; Grid Forum lists
-		("^Sender:"
-		 ("owner-grid-announce@mcs.anl.gov" . "grid-forum/announce")
-		 ("owner-security-wg@mcs.anl.gov" . "grid-forum/security-wg")
-		 ("owner-accounts-wg@mcs.anl.gov" . "grid-forum/accounts-wg")
-		 ("owner-data-wg@mcs.anl.gov" . "grid-forum/data-wg")
-		 )
-
-		;; CIC lists
-		("^Sender:"
-		 ("cic-swg-request" . "cic/swg")
-		 ("cic-rpg-request" . "cic/rpg")
-		 )
-
-		;; Kerberos lists
-		("^Senders:"
-		 ("Ietf-krb-wg-Owner@achilles.ctd.anl.gov" . "kerberos/ietf-krb-wg")
-		 ("owner-java-kerberos@lists.Stanford.EDU" . "kerberos/java-kerberos")
-		 )
-		("^To:"
-		 ("krbdev@mit.edu" . "kerberos/krbdev")
-		 ("krb-protocol@mit.edu" . "kerberos/krb-protocol")
-		 ("kerberos@MIT.EDU" . "kerberos/kerberos")
-		 ("pc-kerberos@MIT.EDU" . "kerberos/pc-kerberos")
-		 )
-
-		;; NCSA maillists
-		("^Sender:"
-		 ("owner-security@ncsa.uiuc.edu" . "ncsa/security")
-		 ("owner-ncsa-irst@ncsa.uiuc.edu" . "ncsa/ncsa-irst")
-		 ("owner-comp-pol@ncsa.uiuc.edu" . "ncsa/compol")
-		 ("owner-access-online@ncsa.uiuc.edu" . "ncsa/access-online")
-		 )
-		("^Subject:"
-		 ("Headline News" . "ncsa/headline-news")
-		 )
-
-		;; Technology lists
-		("^Sender:"
-		 ("owner-fvwm@hpc.uh.edu" . "technologies/fvwm")
-		 ("owner-linux-tp600@icemark.ch" . "technologies/thinkpad")
-		 ("owner-wu-ftpd@wugate.wustl.edu" . "technologies/wuftpd")
-		 ;; Seems like can only use '*' in next regex and not '?'
-		 ("owner-xemacs\(-announce\)*@xemacs.org" . "technologies/xemacs")
-		 ("ssh-afs-owner@umich.edu" . "technologies/ssh-afs")
-		 ("owner-hippi@storage.network.com" . "technologies/hippi")
-		 )
-		("^To:"
-		 ("perl-update" . "technologies/perl")
-		 )
-
-
-		;; Alliance VMR lists
-		("^Sender:"
-		 ("owner-gsi-wg@ncsa.uiuc.edu" . "alliance-vmr/gsi-wg")
-		 ("owner-vmr-wg@ncsa.uiuc.edu" . "alliance-vmr/vmr-wg")
-		 ("owner-hpcportals@ncsa.uiuc.edu" . "alliance-vmr/portals")
-		 ("owner-portals@nas.nasa.gov" . "alliance-vmr/portals")
-		 )
-
-		;; Miscellaneous lists
-		("^Sender:"
-		 ("owner-first-team@ncsa.uiuc.edu" . "security/first-teams")
-		 )
 		("^To:"
 		 ("crypto-gram@chaparraltree.com" . "security/crypto-gram")
 		 ("nev@bostic.com" . "misc/nev-dull")
 		 )
-
 		)
-)
+	      )
 
 
 ;; Set up virtual folders
 (setq-default vm-virtual-folder-alist
 	      '(
-		("New and Unread" (("mbox") (or (unread) (new))))
+		("New and Unread" (("mbox")
+				   (and (not (deleted))
+					(or (unread) (new)))))
 
-		;; Unread stuff in my inbox
-		("Unread" (("mbox") (and (not deleted) unread)))
+		("New" (("mbox") (and (not (deleted))
+				      (new))))
+
+		("Undeleted" (("mbox") (not (deleted))))
 
 		("From Steve"
 		 (("mbox") (author "tuecke@mcs.anl.gov")))
@@ -299,6 +225,19 @@
 		  :selected (string-equal vm-forwarding-digest-type "mime")]
 		 ))
 
+  (add-submenu '("Send")
+	       '("Bandwidth mode"
+		 ["Low" (vm-set-bandwidth-mode "low")
+		  :style radio
+		  :selected (string-equal "low"
+			     vm-bandwidth-mode)]
+		 ["High" (vm-set-bandwidth-mode "high")
+		  :style radio
+		  :selected (string-equal "high"
+			     vm-bandwidth-mode)]
+		 )
+	       )
+		  
   ;;(vm-add-maillists-menu)
 )
 
@@ -355,21 +294,45 @@
   (let ((mail-signature-file file))
     (mail-signature)))
 
-(defun mail-add-insert-signature-menu()
-  "Add my insert-signature menu to the Mail menu. Intended for compose mode."
+(defvar my-sig-dir "~/Mail/sigs"
+  "Where my signature files are.")
 
-  (add-submenu '("Mail")
-	       '("Insert signature..."
-		 ["DSL"
-		  (insert-signature "~/.sig/dsl") t]
-		 ["Formal"
-		  (insert-signature "~/.sig/formal") t]
-		 ["Personal"
-		  (insert-signature "~/.sig/personal") t]
-		 ))
+(defvar my-sig-extension ".txt"
+  "File extension on signature files.")
+
+(defun mail-add-insert-signature-menu ()
+  "Add an signature insertion menu to the Mail menu.
+Intended for compose mode."
+
+  (let ((menu (generate-insert-signature-menu)))
+    (add-submenu '("Mail")
+		   menu
+		   )
+    )
+)
+
+(defun generate-insert-signature-menu ()
+  "Generate menu for insertion of signatures."
+
+  (cons "Insert-signature..."
+	(mapcar
+	 (function
+	  (lambda(sig-file)
+	    (let ((entry (vector
+			  (replace-in-string
+			   (file-name-nondirectory sig-file)
+			   (concat my-sig-extension "$")
+			   "")
+			  (list 'insert-signature sig-file))
+			 ))
+	      entry
+	      )
+	    )
+	  )
+	 (directory-files my-sig-dir t nil t t)
+	 )
+	)
   )
-
-
 
 ;; Don't auto fill header lines
 ;; XXX Really belongs elsewhere
@@ -401,22 +364,36 @@
 	 ("owner-mace@internet2.edu" . "DarkRed")
 	 ("owner-hepki-tag@internet2.edu" . "DarkRed")
 	 ("owner-mcs@mcs.anl.gov" . "DarkRed")
+	 ("owner-wu-ftpd@wugate.wustl.edu" . "DarkRed")
+	 ("owner-ietf-pkix@mail.imc.org" . "DarkRed")
+	 ("owner-ietf-sacred@mail.imc.org" . "DarkRed")
+	 ("cfrg-admin@ietf.org" . "DarkRed")
+	 ("owner-access-online@ncsa.uiuc.edu" . "DarkRed")
+	 ;; High-interest misc lists
+	 ("owner-announce@cs.uiuc.edu" . "red")
 	 ("owner-dsl@mcs.anl.gov" . "red")
 	 ("owner-dsl-core@mcs.anl.gov" . "red")
 	 ("owner-dsl-uc@mcs.anl.gov" . "red")
 	 ("dsl-admin@cs.uchicago.edu" . "red")
 	 ("ppdg-siteaa-admin@ppdg.net" . "red")
+	 ("ppdg-cara-admin@ppdg.net" . "red")
 	 ("owner-doe-sg@george.lbl.gov" . "red")
 	 ;; Globus lists
 	 ("owner-discuss@globus.org" . "DarkBlue")
 	 ("owner-java@globus.org" . "DarkBlue")
-	 ("owner-mpich-g@globus.org" . "blue")
+	 ("owner-cray@globus.org" . "DarkBlue")
+	 ("owner-mpich-g@globus.org" . "DarkBlue")
+	 ("owner-webservices-internal@globus.org" . "DarkBlue")
+	 ("owner-windows@globus.org" . "DarkBlue")
+	 ("owner-mds@globus.org" . "DarkBlue")
 	 ;; High-interest Globus lists
 	 ("owner-python-discuss@globus.org" . "blue")
 	 ("owner-developers@globus.org" . "blue")
 	 ("owner-developer-discuss@globus.org" . "blue")
 	 ("owner-ogsa-alpha@globus.org" . "blue")
 	 ("owner-ogsa-developers@globus.org" . "blue")
+	 ("owner-gt3-developers-internal@globus.org" . "blue")
+	 ("owner-gsi-openssh@globus.org" . "blue")
 	 ;; Management lists
 	 ("owner-dsl-management@mcs.anl.gov" . "orange")
 	 ("owner-ogsa-management@globus.org" . "orange")
@@ -424,7 +401,9 @@
 	 ;; GGF
 	 ("owner-security-wg@gridforum.org" . "green")
 	 ("owner-ogsi-wg@gridforum.org" . "green")
-	 ("gridforum.org" . "darkgreen")
+	 ("owner-ogsa-security@globus.org" . "green")
+	 ("gridforum.org" . "DarkGreen")
+	 ("ggf-testscripts-admin@cs.uchicago.edu" . "DarkGreen")
 	 ;; Essentially me
 	 ("owner-security-internal@globus.org" . "white")
 	 )

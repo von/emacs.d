@@ -185,6 +185,11 @@
 ;; Turn on paren highlighting
 (paren-set-mode 'paren)
 
+;; Make wsdl files invoke xml mode
+(setq auto-mode-alist
+      (append '(("\\.wsdl" . xml-mode)
+		)
+	      auto-mode-alist))
 
 
 (setq minibuffer-max-depth nil)

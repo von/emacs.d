@@ -29,6 +29,10 @@
     (setq vm-url-browser "c:\\Program Files\\mozilla.org\\Mozilla\\mozilla.exe")
   )
 
+;; Mac OS X - use open command
+(setq vm-url-browser "open")
+
+
 ;; Move to next message after deleting or killing
 (setq-default vm-move-after-deleting t)
 (setq-default vm-move-after-killing t)
@@ -61,7 +65,6 @@
 (setq-default vm-default-empty-folders nil)
 
 ;; Set up points to my mail box and folders
-(setq-default vm-primary-inbox "~/Mail/mbox")
 (setq-default vm-folder-directory "~/Mail/")
 
 ;; Save a copy of all outgoing email
@@ -102,6 +105,7 @@
 
 
 ;; Set up virtual folders
+;; XXX should set up inboxes variable
 (setq-default vm-virtual-folder-alist
 	      '(
 		("New and Unread" (("mbox")
@@ -136,28 +140,91 @@
 		 (("mbox") (label "read")))
 
 		("SPAM"
-		 (("mbox") (header "X-Spam-Flag: YES")))
-		("Interesting People"
-		 (("mbox") (header "Sender: owner-ip@v2.listbox.com")))
+		 (("mbox" "spam")
+		  (or
+		   (header "X-Spam-Flag: YES")
+		   (header "X-NCSA-MailScanner: Found to be infected")
+		   )))
+		("News"
+		 (("mbox")
+		  (or
+		   (header "Sender: owner-ip@v2.listbox.com")
+		   (header "From: Grid Today <grid@gridtoday.com>")
+		   )))
 		("Cryptography"
 		 (("mbox") (header "Sender: owner-cryptography@metzdowd.com")))
 		("Globus Misc"
-		 (("mbox") (or (header "Sender: owner-discuss@globus.org")
-			       (header "Sender: owner-mpich-g@globus.org")
-			       (header "Sender: owner-developer-discuss@globus.org")
-			       )))
+		 (("mbox")
+		  (or
+		   (header "Sender: owner-discuss@globus.org")
+		   (header "Sender: owner-mpich-g@globus.org")
+		   (header "Sender: owner-developer-discuss@globus.org")
+		   (header "Sender: owner-java@globus.org")
+		   )))
+		("Globus Board"
+		 (("mbox")
+		  (header "Sender: owner-board@globus.org")))
 		("GGF Misc"
-		 (("mbox"
+		 (("mbox")
 		  (or (header "Sender: owner-policy-wg@gridforum.org")
 		      (header "Sender: ogsa-wg@ggf.org")
-		      ))))
+		      )))
 		("GGF Security"
-		 (("mbox" (header "Sender: owner-authz-wg@gridforum.org"))))
-		("Oasis"
-		 (("mbox" (or (header "Delivered-To: mailing list xacml@lists.oasis-open.org")
-			      (header "Delivered-To: mailing list security-services@lists.oasis-open.org")
-			      ))))
-		   
+		 (("mbox")
+		  (or
+		   (header "Sender: owner-authz-wg@gridforum.org")
+		   (header "Sender: owner-ogsa-sec-wg@gridforum.org")
+		   (header "Sender: owner-ogsa-authz-wg@gridforum.org")
+		   )))
+		("IETF Lists"
+		 (("mbox")
+		  (or
+		   (header "Sender: owner-ietf-pkix@mail.imc.org")
+		   (header "Sender: owner-ietf-krb-wg@achilles.ctd.anl.gov")
+		   (header "Sender: cfrg-admin@ietf.org")
+		   (header "Sender: owner-ietf-cat-wg@lists.Stanford.EDU")
+		   )
+		  )
+		 )
+		("OASIS Lists"
+		 (("mbox")
+		  (or
+		   (header "Delivered-To: mailing list security-services@lists.oasis-open.org")
+		   (header "Delivered-To: mailing list xacml@lists.oasis-open.org")
+		   (header "Delivered-To: mailing list wss@lists.oasis-open.org")
+		   (header "Delivered-To: mailing list announce@lists.oasis-open.org")
+		   (header "Delivered-To: mailing list pki-tc@lists.oasis-open.org")
+		  )
+		  ))
+		("Internet2"
+		 (("mbox")
+		  (or
+		   (header "List-Id: <shibboleth-dev.internet2.edu>")
+		   (header "Sender: owner-mace@internet2.edu")
+		   (header "List-Id: <mace.internet2.edu>")
+		   (header "List-Id: <hepki-tag.internet2.edu>")
+		   (header "List-Id: <mace-opensaml-users.internet2.edu>")
+		  )))
+		("NCSA Security"
+		 (("ncsa")
+		  (header "Sender: owner-security@ncsa.uiuc.edu")
+		  ))
+		("NCSA Security Monitoring"
+		 (("ncsa-sec-monitoring")
+		  (header "Sender: owner-security@ncsa.uiuc.edu")
+		  ))
+		("Mail Cruft"
+		 (("mbox")
+		  (or
+		   (header "Subject: BOUNCE")
+		   (header "Subject: SUBSCRIBE")
+		   (header "Subject: UNSUBSCRIBE")
+		   )))
+		("Misc Reading"
+		 (("mbox")
+		  (or
+		   (header "Sender: owner-ip@v2.listbox.com")
+		   )))
 		)
 	      )
 
@@ -187,9 +254,11 @@
 (defun my-vm-mail-mode-hook ()
   "my vm-mail-mode hook."
   (easy-menu-remove '("Lisp-Interaction"))
-  (mail-add-from-menu)
   (mail-folder-compose-function)
-  (mail-add-insert-signature-menu)
+  (if modify-menu
+      (mail-add-from-menu)
+      (mail-add-insert-signature-menu)
+    )
   (set-buffer-frame-title-format (concat "Compose: " (buffer-name)))
   ;; Add cc field automatically for me if not already there
   (save-excursion
@@ -281,8 +350,9 @@
 (add-hook 'vm-summary-mode-hook 'vm-set-frame-title)
 (add-hook 'vm-summary-mode-hook 'my-vm-add-virtual-key-bindings)
 (add-hook 'vm-mode-hook 'vm-set-frame-title)
-(add-hook 'vm-mode-hook 'vm-add-edit-key-bindings)
+(add-hook 'vm-mail-mode-hook 'vm-add-edit-key-bindings)
 (add-hook 'vm-presentation-mode-hook 'vm-set-frame-title)
+(add-hook 'mail-mode-hook 'mail-abbrevs-setup)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;

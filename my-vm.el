@@ -251,14 +251,11 @@
 ;; Hooks
 ;;
 
+;; Called for composition buffers
 (defun my-vm-mail-mode-hook ()
   "my vm-mail-mode hook."
   (easy-menu-remove '("Lisp-Interaction"))
   (mail-folder-compose-function)
-  (if modify-menu
-      (mail-add-from-menu)
-      (mail-add-insert-signature-menu)
-    )
   (set-buffer-frame-title-format (concat "Compose: " (buffer-name)))
   ;; Add cc field automatically for me if not already there
   (save-excursion
@@ -371,55 +368,4 @@
 (add-hook 'vm-mode-hook 'my-vm-mc-install-read-mode)
 (add-hook 'vm-summary-mode-hook 'my-vm-mc-install-read-mode)
 (add-hook 'vm-virtual-mode-hook 'my-vm-mc-install-read-mode)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; Signature inserting stuff
-;;
-
-(defun insert-signature (file)
-  (let ((mail-signature-file file))
-    (mail-signature)))
-
-(defvar my-sig-dir "~/Mail/sigs"
-  "Where my signature files are.")
-
-(defvar my-sig-extension ".txt"
-  "File extension on signature files.")
-
-(defun mail-add-insert-signature-menu ()
-  "Add an signature insertion menu to the Mail menu.
-Intended for compose mode."
-
-  (let ((menu (generate-insert-signature-menu)))
-    (add-submenu '("Mail")
-		   menu
-		   )
-    )
-)
-
-(defun generate-insert-signature-menu ()
-  "Generate menu for insertion of signatures."
-
-  (cons "Insert-signature..."
-	(mapcar
-	 (function
-	  (lambda(sig-file)
-	    (let ((entry (vector
-			  (replace-in-string
-			   (file-name-nondirectory sig-file)
-			   (concat my-sig-extension "$")
-			   "")
-			  (list 'insert-signature sig-file))
-			 ))
-	      entry
-	      )
-	    )
-	  )
-	 (directory-files my-sig-dir t nil t)
-	 )
-	)
-  )
-
-
 

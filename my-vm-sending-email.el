@@ -21,7 +21,36 @@
 (setq-default vm-forwarding-digest-type nil)
 
 ;; Headers not to forward
-(setq-default vm-unforwarded-header-regexp "\\(Return-Path:\\|Received:\\|X-\\|Message-Id:\\|In-Reply-To:\\|Mime-Version:\\|Content-Type:\\|Precedence:\\|Content-Disposition:\\|User-Agent:\\|Sender:\\|Organization:\\|References:\\|Content-Transfer-Encoding:\\|List-Help:\\|List-Post:\\|List-Subscribe:\\|List-Id:\\|List-Unsubscribe:\\|List-Archive:\\|Errors-To:\\Thread-Topic:\\Thread-Index:\\context-class:\\|Content-Class:\\|Thread-Topic:\\|thread-index:\\|Importance:\\)")
+(setq-default vm-unforwarded-header-regexp 
+	      (regexp-opt '(
+			    "Return-Path:"
+			    "Received:"
+			    "X-"
+			    "Message-Id:"
+			    "In-Reply-To:"
+			    "Mime-Version:"
+			    "Content-Type:"
+			    "Precedence:"
+			    "Content-Disposition:"
+			    "User-Agent:"
+			    "Sender:"
+			    "Organization:"
+			    "References:"
+			    "Content-Transfer-Encoding:"
+			    "List-Help:"
+			    "List-Post:"
+			    "List-Subscribe:"
+			    "List-Id:"
+			    "List-Unsubscribe:"
+			    "List-Archive:"
+			    "Errors-To:"
+			    "Thread-Topic:"
+			    "Thread-Index:"
+			    "context-class:"
+			    "Content-Class:"
+			    "thread-index:"
+			    "Importance:"
+			    )))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -148,6 +177,59 @@
   (setq auto-fill-inhibit-regexp "\\(resent-\\)?\\(To:\\|CC:\\|Bcc:\\)"))
 
 (add-hook 'vm-mail-hook 'no-address-auto-fill)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Signature inserting stuff
+;;
+
+(defun insert-signature (file)
+  (let ((mail-signature-file file))
+    (mail-signature)))
+
+(defvar my-sig-dir "~/Mail/sigs"
+  "Where my signature files are.")
+
+(defvar my-sig-extension ".txt"
+  "File extension on signature files.")
+
+(easy-menu-define nil vm-mail-mode-map
+  "Allow insertion of a signature"
+  (generate-insert-signature-menu)))
+
+(defun generate-insert-signature-menu ()
+  "Generate menu for insertion of signatures."
+
+  (cons "Insert-signature..."
+	(mapcar
+	 (function
+	  (lambda(sig-file)
+	    (let ((entry (vector
+			  (replace-in-string
+			   (file-name-nondirectory sig-file)
+			   (concat my-sig-extension "$")
+			   "")
+			  (list 'insert-signature sig-file))
+			 ))
+	      entry
+	      )
+	    )
+	  )
+
+	 (directory-files my-sig-dir
+			  ;; Full path
+			  t
+			  ;; Don't match files starting with "."
+			  ;; (including directories)
+			  ;; Don't match files ending with "~"
+			  "^[^.].*[^~]$"
+			  ;; Sort
+		 t)
+)
+	)
+  )
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

@@ -146,12 +146,17 @@
 			       (header "Sender: owner-developer-discuss@globus.org")
 			       )))
 		("GGF Misc"
-		 ("mbox"
+		 (("mbox"
 		  (or (header "Sender: owner-policy-wg@gridforum.org")
 		      (header "Sender: ogsa-wg@ggf.org")
-		      )))
+		      ))))
 		("GGF Security"
-		 ("mbox" (header "Sender: owner-authz-wg@gridforum.org")))
+		 (("mbox" (header "Sender: owner-authz-wg@gridforum.org"))))
+		("Oasis"
+		 (("mbox" (or (header "Delivered-To: mailing list xacml@lists.oasis-open.org")
+			      (header "Delivered-To: mailing list security-services@lists.oasis-open.org")
+			      ))))
+		   
 		)
 	      )
 

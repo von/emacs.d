@@ -13,6 +13,11 @@
 (global-set-key "\C-x\C-c" 'delete-frame)
 (global-set-key "\C-xC" 'save-buffers-kill-emacs)
 
+;; Make suspend harder to do
+(global-set-key "\C-z" 'other-window)
+(global-set-key "\C-c\C-z" 'suspend-emacs)
+
+
 (defun kill-buffer-and-window()
   "Kill current buffer and remove it's window."
   (interactive)

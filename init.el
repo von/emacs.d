@@ -193,3 +193,25 @@
 
 
 (setq minibuffer-max-depth nil)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Printer stuff
+
+(setq ps-print-color-p nil)
+(setq printer-name "//cab-server/clw14 basement")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; MS Windows Stuff
+;;
+
+(if is-ms-windows
+    (progn
+      (setq completion-ignore-case t)
+      ;; This also effects email alias completions
+      ;;(setq completion-regexp-list
+      ;;	    (append '("regex")
+      ;;		    completion-regexp-list))
+      ))
+

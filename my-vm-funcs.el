@@ -8,7 +8,11 @@
   "Reload mail aliases from bbdb and my aliases file."
 
   (interactive)
-  (rebuild-mail-aliases mail-abbrev-mailrc-file)
+  (if is-xemacs
+      (rebuild-mail-aliases mail-abbrev-mailrc-file)
+    (rebuild-mail-abbrevs mail-abbrev-mailrc-file)
+    )
+  
   (bbdb-define-all-aliases)
 )
 
@@ -64,7 +68,10 @@ be overwritten if it already exists."
 
   (save-excursion
     (if (mail-position-on-field header t)
-	(backward-kill-line)
+	(if is-xemacs
+	    (backward-kill-line)
+	  ;;(backward-kill-sentence)
+	  )
       (progn
 	(mail-position-on-field "subject")
 	(insert "\n")))

@@ -14,8 +14,8 @@
 ;; Turn threading off by default
 (setq-default vm-summary-show-threads nil)
 
-;; Set summary format
-(setq-default vm-summary-format "%4n %*%a %-17.17F %-3.3m %2d %4l/%-5c %I\"%s\"
+;; Set summary format (should have CR in string)
+(setq-default vm-summary-format "%4n %2M/%02d %*%a %-17.17F %I\"%s\" (%c)
 ")
 
 ;; Don't use subject for threading
@@ -38,8 +38,11 @@
 (setq vm-summary-uninteresting-senders
       "\\(vwelch@ncsa.uiuc.edu\\|welch@mcs.anl.gov\\|von@vwelch.com\\)")
 
-;; Auto check for new mail when visiting each folder
-(setq-default vm-auto-get-new-mail t)
+;; Auto check for new mail when visiting each folder?
+(setq-default vm-auto-get-new-mail nil)
+
+;; How often to check for mail?
+(setq vm-mail-check-interval nil)
 
 ;; Don't automatically go to new mail messages
 (setq-default vm-jump-to-new-messages nil)
@@ -87,7 +90,7 @@
 
 ;; Wrap long lings
 ;; XXX This is broken
-(setq-default vm-fill-paragraphs-containing-long-lines nil)
+;; (setq vm-fill-paragraphs-containing-long-lines nil)
 
 ;; Auto-center summary?
 (setq-default vm-auto-center-summary nil)
@@ -102,6 +105,14 @@
 
 ;; Don't auto create enteries for every person I get email from
 (setq-default bbdb/mail-auto-create-p nil)
+
+(defun my-rebuild-mail-aliases()
+  "Reload mail aliases from bbdb and my aliases file."
+
+  (interactive)
+  (rebuild-mail-aliases mail-abbrev-mailrc-file)
+  (bbdb-define-all-aliases)
+)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -132,20 +143,21 @@
 (setq-default vm-infer-mime-types t)
 
 ;; Default place to save attachments
-(setq-default vm-mime-attachment-save-directory "/tmp/")
+(setq-default vm-mime-attachment-save-directory "~/")
 
 ;; Don't decode messages when previewing them
 (setq-default vm-mime-decode-for-preview nil)
 
 ;; Don't display these mime types myself
-(setq-default vm-mime-internal-content-type-exceptions
-	      '("text/html" "image/jpeg" "image/gif")
-	      )
+;(setq-default vm-mime-internal-content-type-exceptions
+;	      '("text/html" "image/jpeg" "image/gif")
+;	      )
 
 ;; Don't display these attachments automatically
-(setq-default vm-auto-displayed-mime-content-type-exceptions
-	      '("text/html")
-	      )
+;(setq-default vm-auto-displayed-mime-content-type-exceptions
+;;            Eudora send stuff at HTML, so go ahead and display this
+;	      '("text/html")
+;	      )
 
 ;; Handle attachments
 (setq-default vm-mime-external-content-types-alist
@@ -158,15 +170,10 @@
 	;;("image/jpeg"	                  "xview")
 	("video/mpeg"                     "mpeg_play")
 	("video" 	                  "xanim")
-	;; XXX doc_viewer doesn't seem to work here
-	("application/pdf"                "acroread")
-	;; StarOffice sucks, don't use it
-	;;("application/x-msexcel"          "soffice")
-	;;("application/msword"             "soffice")
-	;;("application/x-mspowerpoint"     "soffice")
-	;;("application/vnd.ms-powerpoint"  "soffice")
-	;;("application/vnd.ms-excel"       "soffice")
-	("APPLICATION/PostScript"           "ghostscript")
+	;; Use mime_display for all applications
+	;; Windows workaround: exec explicitly with perl or the
+	;;                     script doesn't get it's arguments
+	("application"                    "perl c:\\utils\\mime_display.pl %t %f")
 	)
       )
 
@@ -224,7 +231,7 @@
 					      "outbox")))
 
 ;; Where my aliases are
-(setq-default mail-abbrev-mailrc-file "~/.mail_aliases")
+(setq-default mail-abbrev-mailrc-file "~/Mail/mail_aliases")
 
 ;; Automatically delete messages after saving or archiving
 (setq-default vm-delete-after-archiving t)
@@ -366,89 +373,21 @@
 ;; Set up virtual folders
 (setq-default vm-virtual-folder-alist
 	      '(
-		("New and Unread"
-		 (("mbox")
-		  (or (unread) (new)))
-		 )
+		("New and Unread" (("mbox") (or (unread) (new))))
 
 		;; Unread stuff in my inbox
-		("Inbox-Unread"
-		 (("mbox")
-		  (not (read))
-		  )
-		 )
+		("Unread" (("mbox") (and (not deleted) unread)))
 
-		;; High-interest
-		("High-interest"
-		 (("maillists/globus-announce"
-		   "maillists/globus-security"
-		   "maillists/globus-gsiftp"
-		   "maillists/grid-forum-announce"
-		   "maillists/grid-forum-security-wg"
-		   "maillists/headline-news"
-		   "maillists/hpc-wire"
-		   "maillists/dsstar"
-		   "maillists/access-online"
-		   )
-		  (any)
-		  )
-		 )
+		("From Steve"
+		 (("mbox") (author "tuecke@mcs.anl.gov")))
+		("From Ian"
+		 (("mbox") (author "foster@mcs.anl.gov")))
 
-		;; New Globus email
-		("Globus-New"
-		 (("maillists/globus-announce"
-		   "maillists/globus-security"
-		   "maillists/globus-gsiftp"
-		   "maillists/globus-cray"
-		   "maillists/globus-developers"
-		   )
-		  (any)
-		  )
-		 )
-
-		;; Medium-interest
-		("Med-interest"
-		 (("maillists/compol"
-		   "maillists/globus-cray"
-		   "maillists/globus-developers"
-		   "maillists/ietf-krb-wg"
-		   "maillists/krbdev"
-		   "maillists/linux-users"
-		   "maillists/nev-dull"
-		   "maillists/vmr-wg"
-		   )
-		  (any)
-		  )
-		 )
-
-		("Low-interest"
-		 (("maillists/cic-rpg"
-		   "maillists/cic-swg"
-		   "maillists/comppol"
-		   "maillists/first-teams"
-		   "maillists/fvwm"
-		   "maillists/grid-forum-accounts-wg"
-		   "maillists/grid-forum-data-wg"
-		   "maillists/hippi"
-		   "maillists/java-kerberos"
-		   "maillists/kerberos"
-		   "maillists/krb-protocol"
-		   "maillists/ncsa-irst"
-		   "maillists/ncsa-security"
-		   "maillists/globus-support"
-		   "maillists/wuftpd"
-		   "maillists/xemacs"
-		   )
-		  (any)
-		  )
-		 )
-
-		("No-interest"
-		 (()
-		  (any)
-		  )
-		 )
+		("SPAM"
+		 (("mbox") (header "X-Spam-Flag: YES")))
 		)
+
+	      
 )
 
 ;;
@@ -498,8 +437,8 @@
       ;; as the folder name
       (replace-in-string
        (buffer-file-name folder-buffer)
-       (expand-file-name vm-folder-directory)
-       "")
+       (regexp-quote (expand-file-name vm-folder-directory))
+       "" t)
     ;; Else this is a virtual folder or something like that and we
     ;; use use the buffer name
     (buffer-name (current-buffer))
@@ -519,9 +458,9 @@
   (mail-add-insert-signature-menu)
   (set-buffer-frame-title-format (concat "Compose: " (buffer-name)))
   ;; Add cc field automatically for me if not already there
-  ;;(save-excursion
-  ;; (or (mail-position-on-field "CC" t)
-  ;;     (mail-set-header "CC" "")))
+  (save-excursion
+   (or (mail-position-on-field "CC" t)
+       (mail-set-header "CC" "")))
 )
 
 ;;(add-hook 'vm-mail-mode-hook 'my-vm-mail-mode-hook)
@@ -530,38 +469,32 @@
 (defun my-vm-menu-setup-hook ()
   "My vm-menu-setup-hook"
 
+  (add-submenu '("Send")
+	       '("Queuing..."
+		 ["Send directly" (setq smtpmail-queue-mail nil)
+		  :style radio
+		  :selected (not smtpmail-queue-mail)]
+		 ["Queue mail" (setq smtpmail-queue-mail t)
+		  :style radio
+		  :selected smtpmail-queue-mail]
+		 ))
+
+  ;; Nice to find a test here to see if I have queued mail
+  (add-menu-button '("Send")
+		 ["Send queued mail"
+		  smtpmail-send-queued-mail (smtpmail-queued)])
+
+  (add-submenu '("Send")
+	       '("Forwarding Encapsulation..."
+		 ["None" (setq vm-forwarding-digest-type nil)
+		  :style radio
+		  :selected (eq vm-forwarding-digest-type nil)]
+		 ["Mime" (setq vm-forwarding-digest-type "mime")
+		  :style radio
+		  :selected (string-equal vm-forwarding-digest-type "mime")]
+		 ))
+
   ;;(vm-add-maillists-menu)
-  (add-menu-button '("Virtual")
-  		   ["Create Virtual from Steve"
-  		    (vm-create-virtual-folder-for-author "tuecke@mcs.anl.gov")
-		    t]
-		   "Apply Virtual Folder")
-  (add-menu-button '("Virtual")
-  		   ["Create Virtual from Ian"
-  		    (vm-create-virtual-folder-for-author "foster@mcs.anl.gov")
-		    t]
-		   "Apply Virtual Folder")
-  (add-menu-button '("Virtual")
-  		   ["Create Virtual from Lee"
-  		    (vm-create-virtual-folder-for-author "liming@mcs.anl.gov")
-		    t]
-		   "Apply Virtual Folder")
-  (add-menu-button '("Virtual")
-  		   ["Create Virtual with Unread"
-  		    (vm-create-virtual-folder-unread) t]
-		   "Apply Virtual Folder")
-  (add-menu-button '("Virtual")
-  		   ["Create Virtual with Undeleted"
-  		    (vm-create-virtual-folder-undeleted) t]
-		   "Apply Virtual Folder")
-  (add-menu-button '("Virtual")
-  		   ["Create Virtual with deal-with"
-  		    (vm-create-virtual-folder-for-label "deal-with") t]
-		   "Apply Virtual Folder")
-  (add-menu-button '("Virtual")
-  		   ["Create Virtual with to-read"
-  		    (vm-create-virtual-folder-for-label "read") t]
-		   "Apply Virtual Folder")
 )
 
 (defun my-vm-add-virtual-key-bindings ()
@@ -966,7 +899,7 @@ when we compose email from a specific folders."
 
 ;; Don't auto fill header lines
 ;; XXX Really belongs elsewhere
-(setq-default auto-fill-inhibit-regexp "^\\(To:\\|Cc:\\|Subject:\\)")
+;;(setq-default auto-fill-inhibit-regexp "^\\(To:\\|Cc:\\|Subject:\\)")
 
 
 (defun vm-create-virtual-folder-ext (selector &optional read-only name)
@@ -1003,3 +936,95 @@ Prefix read-only means the new virtual folder should be visited read only."
   ;; vm-virtual-folder-alist was bound to the temp value above
   (if vm-use-menus
       (vm-menu-install-known-virtual-folders-menu)))
+
+;; Changes on Windows box
+;;(setq vm-spool-files '("localhost:110:pass:welch:*"))
+(setq vm-spool-files '("imap:localhost:143:inbox:login:welch:*"))
+
+(setq smtpmail-smtp-server "localhost")
+
+(setq vm-url-browser "c:\\Program Files\\Netscape\\Netscape 6\\netscp6.exe")
+
+;; Maximum size of message before prompting
+(setq vm-pop-max-message-size 50000)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; vm-summary-hilit
+;;
+
+(require `vm-summary-hilit)
+
+(setq vm-summary-hilit-alist
+      '(
+	("From:"
+	 ("welch@mcs.anl.gov" . "grey")
+	 )
+	("Sender:"
+	 ;; Misc lists
+	 ("esg-admin@earthsystemgrid.org" . "DarkRed")
+	 ("cs-admin@cs.uchicago.edu" . "DarkRed")
+	 ("ppdg-admin@ppdg.net" . "DarkRed")
+	 ("owner-seminars@mcs.anl.gov" . "DarkRed")
+	 ("owner-disc@mcs.anl.gov" . "DarkRed")
+	 ("owner-team@grids-center.org" . "DarkRed")
+	 ("owner-ietf-krb-wg@achilles.ctd.anl.gov" . "DarkRed")
+	 ("owner-mace@internet2.edu" . "DarkRed")
+	 ("owner-hepki-tag@internet2.edu" . "DarkRed")
+	 ("owner-mcs@mcs.anl.gov" . "DarkRed")
+	 ("owner-dsl@mcs.anl.gov" . "red")
+	 ("owner-dsl-core@mcs.anl.gov" . "red")
+	 ("owner-dsl-uc@mcs.anl.gov" . "red")
+	 ("dsl-admin@cs.uchicago.edu" . "red")
+	 ("ppdg-siteaa-admin@ppdg.net" . "red")
+	 ("owner-doe-sg@george.lbl.gov" . "red")
+	 ;; Globus lists
+	 ("owner-discuss@globus.org" . "DarkBlue")
+	 ("owner-java@globus.org" . "DarkBlue")
+	 ("owner-mpich-g@globus.org" . "blue")
+	 ;; High-interest Globus lists
+	 ("owner-python-discuss@globus.org" . "blue")
+	 ("owner-developers@globus.org" . "blue")
+	 ("owner-developer-discuss@globus.org" . "blue")
+	 ("owner-ogsa-alpha@globus.org" . "blue")
+	 ("owner-ogsa-developers@globus.org" . "blue")
+	 ;; Management lists
+	 ("owner-dsl-management@mcs.anl.gov" . "orange")
+	 ("owner-ogsa-management@globus.org" . "orange")
+	 ("owner-globus-ogsa-management@globus.org" . "orange")
+	 ;; GGF
+	 ("owner-security-wg@gridforum.org" . "green")
+	 ("owner-ogsi-wg@gridforum.org" . "green")
+	 ("gridforum.org" . "darkgreen")
+	 ;; Essentially me
+	 ("owner-security-internal@globus.org" . "white")
+	 )
+	("To:\\|Cc:\\cc:"
+	 ("lists.oasis-open.org" . "DarkRed")
+	 ("doe-sg-pma@george.lbl.gov" . "red")
+	 ("doe-sg-ca@george.lbl.gov" . "red")
+	 ("welch@mcs.anl.gov" . "white")
+	 )
+	)
+      )
+
+(vm-make-summary-hilit-alist-faces)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Misc Functions
+;;
+
+(defun smtpmail-queued()
+  "Is there mail queued as a result of smtp-queue-mail?"
+  (> (nth 7 (file-attributes smtpmail-queue-index)) 0)
+)
+
+(defun vm-set-max-message-download-size(size)
+  "Set the maximum size of message to be downloaded without prompting.
+A value of nil indicates that no limit should be set."
+
+  (setq vm-pop-max-message-size size)
+  (setq vm-imap-max-message-size size)
+)
+

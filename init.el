@@ -199,10 +199,27 @@
     (permanent-buffers-mode t))
 
 ;; Turn on paren highlighting
-(if (boundp 'paren-set-mode)
-    (paren-set-mode 'paren))
-(if (boundp 'show-paren-mode)
-    (show-paren-mode t))
+(cond
+ ((boundp 'paren-set-mode)
+  (paren-set-mode 'paren))
+ ((boundp 'show-paren-mode)
+  (show-paren-mode t))
+)
+
+;; Display column number on modeline
+(cond
+ ((boundp 'display-column-mode)
+  (display-column-mode t))
+
+ ((boundp 'column-number-mode)
+  (column-number-mode t))
+ )
+
+;; Display line number on modeline
+(cond
+ ((boundp 'line-number-mode)
+  (line-number-mode t))
+)
 
 ;; Make wsdl files invoke xml mode
 (setq auto-mode-alist

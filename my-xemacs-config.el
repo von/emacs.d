@@ -19,27 +19,6 @@
       ;; XXX - What does this do anyways?
       (require 'pending-del)
 
-      ;; Display line number modeline
-      (cond ((boundp 'line-number-mode)
-	     (line-number-mode t)
-	     )
-	    )
-
-      ;; Display column number on modeline
-      (cond ((boundp 'display-column-mode)
-	     (display-column-mode t)
-	     )
-
-	    ((boundp 'column-number-mode)
-	     (column-number-mode t)
-	     )
-	    )
-      ;; Configure paren matching
-      (cond ((boundp 'paren-set-mode)
-	     (paren-set-mode 'paren)
-	     )
-	    )
-
       ;; Change the values of some variables.
       ;; (t means true; nil means false.)
       ;;

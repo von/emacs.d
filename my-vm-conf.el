@@ -9,6 +9,9 @@
 (setq-default user-full-name "Von Welch")
 (setq-default user-mail-address "welch@mcs.anl.gov")
 
+;; Needed for feedmail and smtpmail to work together
+(setq-default mail-envelope-from user-mail-address)
+
 ;; Regex of senders for whom I want to receiver to appear in the
 ;; summary instead of the sender
 (setq vm-summary-uninteresting-senders

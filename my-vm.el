@@ -8,6 +8,8 @@
 (require 'my-vm-conf)
 (require 'my-vm-getting-email)
 (require 'my-vm-sending-email)
+(require 'my-vm-reading-email)
+(require 'my-vm-summary)
 
 ;; Need to load this so variables will be present for menus
 (require 'smtpmail)
@@ -18,46 +20,21 @@
 ;; No toolbar
 (setq-default vm-use-toolbar nil)
 
-;; Turn threading off by default
-(setq-default vm-summary-show-threads nil)
-
-;; Set summary format (should have CR in string)
-(setq-default vm-summary-format "%4n %2M/%02d %*%a %-17.17F %I\"%s\" (%c)
-")
-
-;; Don't use subject for threading
-(setq-default vm-thread-using-subject nil)
-
-;; Use netscape to display urls, with a new window for each
-;; And tell netscape not to raise itself
-(setq vm-url-browser 'vm-mouse-send-url-to-netscape-new-window)
-(setq vm-netscape-program-switches '("-noraise"))
-
-;; Don't automatically go to new mail messages
-(setq-default vm-jump-to-new-messages nil)
-(setq-default vm-jump-to-unread-messages nil)
-
-;; Show me messages but don't mark them as read until I say so
-(setq-default vm-preview-lines 0)
+;; Select browser to use for urls
+(if is-ms-windows
+    ;;(setq vm-url-browser "c:\\Program Files\\Netscape\\Netscape\\netscp.exe")
+    ;;(setq vm-url-browser "c:\\Program Files\\Internet Explorer\\IEXPLORE.exe")
+    (setq vm-url-browser "c:\\Program Files\\mozilla.org\\Mozilla\\mozilla.exe")
+  )
 
 ;; Move to next message after deleting or killing
 (setq-default vm-move-after-deleting t)
 (setq-default vm-move-after-killing t)
 
-;; Don't take me to the next message when I hit space at the end
-;; of the current one
-(setq-default vm-auto-next-message nil)
-
-;; Wrap long lings
-;; XXX This is broken
-;; (setq vm-fill-paragraphs-containing-long-lines nil)
-
-;; Auto-center summary?
-(setq-default vm-auto-center-summary nil)
-
 ;; Prefix to ignore on message subjects when comparing
 ;; Modified to ignore "[list]" - doesn't work yet
-;;(setq vm-subject-ignored-prefix "^\\(re: *\\|fwd: *\\|\\[.*\\] *\\)+")
+;;(setq vm-subject-ignored-prefix "^\\(re: *\\)+\\(\\\\[.*\\\\])?\\(re: *\\)+")
+;;(setq vm-subject-ignored-prefix "^\\(re: *\\)+")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -151,6 +128,8 @@
 		 (("mbox") (author "foster@mcs.anl.gov")))
 		("From Frank"
 		 (("mbox") (author "franks@mcs.anl.gov")))
+		("From Me"
+		 (("mbox") (author "welch@mcs.anl.gov")))
 
 		("To be printed"
 		 (("mbox") (label "print")))
@@ -161,21 +140,6 @@
 		 (("mbox") (header "X-Spam-Flag: YES")))
 		)
 )
-
-;;
-;; Preload the highlight-headers package and fix up the fonts.
-;; This is a hack, but I can't figure out any other functional
-;; way to get the faces consistantly right.
-(require 'highlight-headers)
-
-(make-face-unbold 'message-headers)
-(set-face-foreground 'message-headers "green")
-
-(make-face-unbold 'message-header-contents)
-(copy-face 'default 'message-header-contents)
-
-(make-face-bold 'message-cited-text)
-(set-face-foreground 'message-cited-text "yellow")
 
 ;;
 ;; Set frame sizes.
@@ -219,20 +183,24 @@
 (defun my-vm-menu-setup-hook ()
   "My vm-menu-setup-hook"
 
-  (add-submenu '("Send")
-	       '("Queuing..."
-		 ["Send directly" (setq smtpmail-queue-mail nil)
-		  :style radio
-		  :selected (not smtpmail-queue-mail)]
-		 ["Queue mail" (setq smtpmail-queue-mail t)
-		  :style radio
-		  :selected smtpmail-queue-mail]
-		 ))
+;  (add-submenu '("Send")
+;	       '("Queuing..."
+;		 ["Send directly" (setq smtpmail-queue-mail nil)
+;		  :style radio
+;		  :selected (not smtpmail-queue-mail)]
+;		 ["Queue mail" (setq smtpmail-queue-mail t)
+;		  :style radio
+;		  :selected smtpmail-queue-mail]
+;		 ))
+
+;  (add-menu-button '("Send")
+;		 ["Send queued mail"
+;		  smtpmail-send-queued-mail (smtpmail-queued)])
 
   ;; Nice to find a test here to see if I have queued mail
   (add-menu-button '("Send")
 		 ["Send queued mail"
-		  smtpmail-send-queued-mail (smtpmail-queued)])
+		  feedmail-run-the-queue t])
 
   (add-submenu '("Send")
 	       '("Forwarding Encapsulation..."
@@ -358,93 +326,5 @@ Intended for compose mode."
 	)
   )
 
-;; Don't auto fill header lines
-;; XXX Really belongs elsewhere
-;;(setq-default auto-fill-inhibit-regexp "^\\(To:\\|Cc:\\|Subject:\\)")
-
-(setq vm-url-browser "c:\\Program Files\\Netscape\\Netscape 6\\netscp6.exe")
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; vm-summary-hilit
-;;
-
-(require `vm-summary-hilit)
-
-;;
-;; First match in list below takes precedence
-;; Note that the header regex requires parens - e.g. (To:|Cc:)
-;;
-(setq vm-summary-hilit-alist
-      '(
-	("From:"
-	 ("welch@mcs.anl.gov" . "grey")
-	 )
-	("Sender:"
-	 ;;
-	 ;; Essentially me
-	 ("owner-security-internal@globus.org" . "white")
-	 ;;
-	 ;; ESG
-	 ("esg-admin@earthsystemgrid.org" . "DarkRed")
-	 ;;
-	 ;; Misc ANL/UC
-	 ("\\(cs-admin\\|staff-admin\\)@cs.uchicago.edu\\|\\(owner-mcs\\|owner-camp-seminars\\|owner-seminars\\|owner-disc\\|owner-unix-users\\)@mcs.anl.gov\\|owner-argonne-today@achilles.ctd.anl.gov" . "DarkRed")
-	 ;;
-	 ;; PPDG
-	 ("\\(ppdg-admin\\|ppdg-jdl-admin\\)@ppdg.net" . "DarkRed")
-	 ("ppdg-siteaa-admin@ppdg.net\\|ppdg-cara-admin@ppdg.net" . "red")
-	 ;;
-	 ;; NMI
-	 ("owner-team@grids-center.org" . "DarkRed")
-	 ;;
-	 ;; IETF
-	 ("owner-ietf-krb-wg@achilles.ctd.anl.gov\\|owner-aaaarch@fokus.gmd.de\\|owner-ietf-pkix@mail.imc.org\\|owner-ietf-sacred@mail.imc.org\\|cfrg-admin@ietf.org" . "DarkRed")
-	 ;;
-	 ;; Internet2
-	 ("owner-mace@internet2.edu\\|owner-hepki-tag@internet2.edu\\|owner-mace-opensaml-users@internet2.edu\\|owner-mw-announce@internet2.edu" . "DarkRed")
-	 ;;
-	 ;; Misc
-	 ("owner-wu-ftpd@wugate.wustl.edu" . "DarkRed")
-	 ("owner-access-online@ncsa.uiuc.edu" . "DarkRed")
-	 ;;
-	 ;; High-interest misc lists
-	 ("owner-announce@cs.uiuc.edu\\|owner-cryptography@wasabisystems.com" . "red")
-	 ;;
-	 ;; DSL
-	 ("owner-dsl@mcs.anl.gov\\|owner-dsl-core@mcs.anl.gov\\|owner-dsl-uc@mcs.anl.gov\\|dsl-admin@cs.uchicago.edu" . "red")
-	 ;;
-	 ;; DOESG
-	 ("owner-doe-\\(sg\\|pma\\|ca\\)@george.lbl.gov" . "#FF00FF")
-	 ;;
-	 ;; Management lists
-	 ("owner-dsl-management@mcs.anl.gov\\|owner-ogsa-management@globus.org\\|owner-globus-ogsa-management@globus.org" . "orange")
-	 ;;
-	 ;; High-interest Globus lists
-	 ("\\(owner-python-discuss\\|owner-developers\\|owner-developer-discuss\\|owner-ogsa-alpha\\|owner-ogsa-developers\\|owner-gt3-developers-internal\\|owner-gsi-openssh\\|owner-ogsa-security\\|owner-ogsa-discuss\\)@globus.org" . "blue")
-	 ;;
-	 ;; Other Globus lists
-	 ("globus.org" . "DarkBlue")
-	 ;;
-	 ;; GGF High-interest lists
-	 ("\\(owner-security-wg\\|owner-ogsi-wg\\|owner-ogsa-sec-wg\\)@gridforum.org" . "green")
-	 ;;
-	 ;; Other GGF lists
-	 ("gridforum.org\\|ggf-testscripts-admin@cs.uchicago.edu" . "DarkGreen")
-	 )
-	;; This regex still doesn't work...
-	("\\(To:\\|Cc:\\|cc:\\)"
-	 ;;
-	 ;; Stuff without Sender field
-	 ("lists.oasis-open.org" . "DarkRed")
-	 ;;
-	 ;; Me
-	 ("welch@mcs.anl.gov" . "white")
-	 )
-	)
-      )
-
-;; Calling this function modifies the above list
-(vm-make-summary-hilit-alist-faces)
 
 

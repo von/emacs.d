@@ -19,12 +19,10 @@ regex is run on the composition buffer.")
 
 (defun setup-mcs-compose ()
   (mail-set-from "Von Welch <welch@mcs.anl.gov>")
-  (mail-set-header "FCC" "~/Mail/mcs/outbox")
 )
 
 (defun setup-vwelch-com-compose ()
   (mail-set-from "Von Welch <von@vwelch.com>")
-  (mail-set-header "FCC" "~/Mail/vwelch.com/outbox")
 )
 
 (defun setup-ncsa-compose ()

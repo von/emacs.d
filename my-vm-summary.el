@@ -58,7 +58,7 @@
 
 ;; DOESG Email
 (copy-face 'default 'summary-doesg-face)
-t(set-face-foreground 'summary-doesg-face "#FF00FF")
+(set-face-foreground 'summary-doesg-face "#FF00FF")
 
 ;; Management email
 (copy-face 'default 'summary-management-face)
@@ -145,6 +145,11 @@ t(set-face-foreground 'summary-doesg-face "#FF00FF")
 	 ;; High-interest misc lists
 	 ("owner-announce@cs.uiuc.edu\\|owner-cryptography@wasabisystems.com\\|owner-cryptography@metzdowd.com\\|owner-ip@v2.listbox.com" . summary-interesting-face)
 	 ;;
+	 ;; TeraGrid Lists
+	 ("owner-security-wg@teragrid.org\\|owner-ncsatg@ncsa.uiuc.edu" . summary-interesting-face)
+	 ("owner-wg@teragrid.org" . summary-low-interest-face)
+	 ;;
+	 ;;
 	 ;; DSL
 	 ("owner-dsl@mcs.anl.gov\\|owner-dsl-developers@mcs.anl.gov\\|owner-dsl-core@mcs.anl.gov\\|owner-dsl-uc@mcs.anl.gov\\|dsl-admin@cs.uchicago.edu\\|owner-dsl-uchicago-staff@mcs.anl.gov" . summary-dsl-face)
 	 ;;
@@ -166,6 +171,9 @@ t(set-face-foreground 'summary-doesg-face "#FF00FF")
 	 ;;
 	 ;; Emsl stuff
 	 ("owner-hpcs2-users@emsl.pnl.gov" . summary-low-interest-face)
+	 ;;
+	 ;; security@ncsa
+	 ("owner-security@ncsa.uiuc.edu" . summary-low-interest-face)
 	 )
 	;;
 	;; A lot of spam seems to use my capitalized NCSA address

@@ -14,10 +14,39 @@
 ;; of the current one
 (setq-default vm-auto-next-message nil)
 
-;; Wrap long lings
-;; This fills emails into a mass, don't use it
-;;(setq vm-fill-paragraphs-containing-long-lines 78)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Fill presentation buffers
+;;
 
+(setq vm-fill-paragraphs-containing-long-lines 78)
+
+(defun my-vm-fill-line (arg)
+  "Return nil if line should be filled, t otherwise. Use to avoid filling cited lines. Meant to be used a fill-paragraph-function."
+
+  (save-excursion
+    (beginning-of-line)
+    (cond
+     ;; Don't fill cited lines
+     ((looking-at "[ \t]*>") t)
+     ;; Don't fill <quote> and </quote>
+     ((looking-at "[ \t]*</?quote>") t)
+     ;; Else, return nil and fill
+     )
+    )
+  )
+
+
+(defun my-vm-presentation-fill-setup()
+  "Setup for filling of vm presentation buffers."
+
+  (make-local-variable 'fill-paragraph-function)
+  (setq fill-paragraph-function 'my-vm-fill-line)
+)
+
+(add-hook 'vm-presentation-mode-hook 'my-vm-presentation-fill-setup)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Preload the highlight-headers package and fix up the fonts.
 ;; This is a hack, but I can't figure out any other functional

@@ -69,14 +69,12 @@
   (scroll-other-window -1)
 )
 
-(cond (is-xemacs
+(global-set-key "\C-u" 'undo)
 
-       (global-set-key '(control /) 'undo)
-       (global-set-key '(control u) 'undo)
-       (global-set-key '(meta right) 'scroll-other-window)
-       (global-set-key '(meta down) 'scroll-other-window-one-line)
-       (global-set-key '(meta left) 'scroll-other-window-down)
-       (global-set-key '(meta up) 'scroll-other-window-down-one-line)
+(global-set-key [(meta down)] 'scroll-other-window-one-line)
+(global-set-key [(meta up)] 'scroll-other-window-down-one-line)
+
+(cond (is-xemacs
 
        ;; Control-x up pages up
        (global-set-key "\C-x\OA" 'scroll-down)

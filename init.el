@@ -168,9 +168,9 @@
 (setq auto-mode-alist
       (append '(("\\.shtml$" . html-mode)
 		("buildall.conf" . sh-mode)
+		("\\.wsdl" . xml-mode)
 		)
 	      auto-mode-alist))
-
 
 
 (defvar gmake-directory ""
@@ -221,12 +221,15 @@
   (line-number-mode t))
 )
 
-;; Make wsdl files invoke xml mode
-(setq auto-mode-alist
-      (append '(("\\.wsdl" . xml-mode)
-		)
-	      auto-mode-alist))
+;; Get rid of toolbar
+(cond
+ ((boundp 'tool-bar-mode)
+  (tool-bar-mode nil))
 
+ ((boundp 'set-default-toolbar-position)
+  (set-default-toolbar-position 'left)
+  (add-spec-list-to-specifier left-toolbar-width '((global (nil . 0)))))
+ )
 
 (setq minibuffer-max-depth nil)
 

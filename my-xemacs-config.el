@@ -30,10 +30,6 @@
 	    next-line-add-newlines nil
 	    )
 
-      ;; Make the toolbar go away
-      (set-default-toolbar-position 'left)
-      (add-spec-list-to-specifier left-toolbar-width '((global (nil . 0))))
-
       ;; When running ispell, consider all 1-3 character words as correct.
       (setq ispell-extra-args '("-W" "3"))
       

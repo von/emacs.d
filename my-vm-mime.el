@@ -27,6 +27,7 @@
 		("\\.ps$" . "application/postscript")
 		("\\.gif$" . "image/gif")
 		("\\.bmp$" . "image/bitmap")
+		("\\.zip$" . "application/zip")
 		))
 
 ;; Guess mime's type using filename and vm-mime-attachment-auto-type-alist

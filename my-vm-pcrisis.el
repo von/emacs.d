@@ -10,6 +10,8 @@
 (setq mcs-address-nice "Von Welch <welch@mcs.anl.gov>")
 (setq ncsa-address "vwelch@ncsa.uiuc.edu")
 (setq ncsa-address-nice "Von Welch <vwelch@ncsa.uiuc.edu>")
+(setq personal-address "von@vwelch.com")
+(setq personal-address-nice "Von Welch <von@vwelch.com>")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -102,6 +104,11 @@
 	("to-ncsa"
 	 (vmpc-header-match "To"
 			    (regexp-quote ncsa-address)))
+	("to-vwelch"
+	 (vmpc-header-match "To" "vwelch.com"))
+	("to-personal"
+	 (vmpc-header-match "To"
+			    (regexp-quote personal-address)))
 	("to-globus"
 	 (vmpc-header-match vmpc-any-recipient "globus.org" ", "))
 	("to-gridforum"
@@ -148,6 +155,11 @@
 	 (vmpc-substitute-header "Bcc" ncsa-address)
 	 (vmpc-substitute-header "Reply-To" ncsa-address-nice)
 	 )
+	("personal"
+	 (vmpc-substitute-header "From" personal-address-nice)
+	 (vmpc-substitute-header "Bcc" personal-address)
+	 (vmpc-substitute-header "Reply-To" personal-address-nice)
+	 )
 	("plain-encode"
 	 (vmpc-pre-function '(setq vm-forwarding-digest-type nil))
 	 )
@@ -173,6 +185,7 @@
 	("from-mcs" "mcs")
 	("to-doesg" "mcs")
 	("to-ncsa" "ncsa")
+	("to-personal" "personal")
 	("majordomo-request" "majordomo-respond")
 	)
 )
@@ -194,6 +207,7 @@
 	;; to a text message
 	("mime-base64" "mime-encode")
 	("plain-msg" "plain-encode")
+	("to-personal" "personal")
 	)
 )
 

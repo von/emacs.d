@@ -34,7 +34,7 @@
 (setq-default vm-infer-mime-types t)
 
 ;; Default place to save attachments
-(setq-default vm-mime-attachment-save-directory "~/")
+(setq-default vm-mime-attachment-save-directory "~/My\ Documents/")
 
 ;; Don't decode messages when previewing them
 (setq-default vm-mime-decode-for-preview nil)
@@ -48,7 +48,10 @@
 
 ;; Don't display these attachments automatically
 (setq-default vm-auto-displayed-mime-content-type-exceptions
-	      '("text/html")
+	      '(
+		"text/html"
+		"image/bmp"
+		)
 	      )
 
 ;; Display plain text first if we have a choice...

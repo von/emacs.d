@@ -144,16 +144,16 @@
 		 (("mbox") (or (header "Sender: owner-discuss@globus.org")
 			       (header "Sender: owner-mpich-g@globus.org")
 			       (header "Sender: owner-developer-discuss@globus.org")
-			       ))
-		 ("GGF Misc"
-		  ("mbox"
-		   (or (header "Sender: owner-policy-wg@gridforum.org")
-		       (header "Sender: ogsa-wg@ggf.org")
-		       )))
-		 ("GGF Security"
-		  ("mbox" (header "Sender: owner-authz-wg@gridforum.org")))
+			       )))
+		("GGF Misc"
+		 ("mbox"
+		  (or (header "Sender: owner-policy-wg@gridforum.org")
+		      (header "Sender: ogsa-wg@ggf.org")
+		      )))
+		("GGF Security"
+		 ("mbox" (header "Sender: owner-authz-wg@gridforum.org")))
 		)
-)
+	      )
 
 ;;
 ;; Set frame sizes.

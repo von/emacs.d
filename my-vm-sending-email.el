@@ -24,10 +24,54 @@
 (setq-default vm-unforwarded-header-regexp "\\(Return-Path:\\|Received:\\|X-\\|Message-Id:\\|In-Reply-To:\\|Mime-Version:\\|Content-Type:\\|Precedence:\\|Content-Disposition:\\|User-Agent:\\|Sender:\\|Organization:\\|References:\\|Content-Transfer-Encoding:\\|List-Help:\\|List-Post:\\|List-Subscribe:\\|List-Id:\\|List-Unsubscribe:\\|List-Archive:\\|Errors-To:\\Thread-Topic:\\Thread-Index:\\context-class:\\|Content-Class:\\|Thread-Topic:\\|thread-index:\\|Importance:\\)")
 
 ;; Reply-to's to ignore
-(setq vm-reply-ignored-reply-toms 
+(setq vm-reply-ignored-reply-tos 
       '(
 	"ogsi-wg@gridforum.org"
+	"secres-leadership@ncsa.uiuc.edu"
 	))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Set up esmtpmail
+
+(setq esmtpmail-code-conv-from nil)
+
+(setq esmtpmail-send-it-by-alist
+      ;; (sender smtp-host)
+      '(("vwelch@ncsa.uiuc.edu" "smtp.ncsa.uiuc.edu")
+	("welch@mcs.anl.gov" "localhost")
+	))
+
+;; provided by jam@austin.asc.slb.com (James A. McLaughlin);
+;; simplified by WJC after more feedmail development;
+;; idea (but not implementation) of copying smtpmail trace buffer to
+;; feedmail error buffer from:
+;;   Mon 14-Oct-1996; Douglas Gray Stephens
+;;   modified to insert error for displaying
+;; Modified to do esmtpmail by Von Welch (Oct-2003)
+(defun feedmail-buffer-to-esmtpmail (prepped errors-to addr-listoid)
+  "Function which actually calls esmtpmail-via-smtp to send buffer as e-mail."
+  ;; I'm not sure smtpmail.el is careful about the following
+  ;; return value, but it also uses it internally, so I will fear
+  ;; no evil.
+  (feedmail-say-debug ">in-> feedmail-buffer-to-esmtpmail %s" addr-listoid)
+  (require 'esmtpmail)
+  (if (not (esmtpmail-via-smtp addr-listoid prepped))
+	  (progn
+		(set-buffer errors-to)
+		(insert "Send via esmtpmail failed.  Probable SMTP protocol error.\n")
+		(insert "Look for details below or in the *Messages* buffer.\n\n")
+		(let ((case-fold-search t)
+			  ;; don't be overconfident about the name of the trace buffer
+			  (tracer (concat "trace.*smtp.*" (regexp-quote esmtpmail-smtp-server))))
+		  (mapcar
+		   '(lambda (buffy)
+			  (if (string-match tracer (buffer-name buffy))
+				  (progn
+					(insert "SMTP Trace from " (buffer-name buffy) "\n---------------")
+					(insert-buffer buffy)
+					(insert "\n\n"))))
+		   (buffer-list))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -42,7 +86,7 @@
 ;;; If you plan to use the queue stuff, also use this:
 ;;;
 (setq feedmail-enable-queue t)
-(setq feedmail-buffer-eating-function 'feedmail-buffer-to-smtpmail)
+(setq feedmail-buffer-eating-function 'feedmail-buffer-to-esmtpmail)
 
 ;; This requires my change to feedmail-vm-mail-mode or I get extra
 ;; frames when sending with vm-frame-per-composition on
@@ -97,6 +141,7 @@
 
 (add-hook 'vm-summary-mode-hook 'feedmail-insert-draft-menu)
 ;; XXX How to update memu when draft added?
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;

@@ -33,5 +33,6 @@
 	))
 
 (setq smtpmail-smtp-server "localhost")
+(setq esmtpmail-smtp-server smtpmail-smtp-server)
 
 (provide 'my-vm-conf)

@@ -100,3 +100,6 @@
 ;; Calling this function modifies the above list
 (vm-make-summary-hilit-alist-faces)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(provide 'my-vm-summary)

@@ -11,6 +11,7 @@
 (require 'my-vm-reading-email)
 (require 'my-vm-summary)
 (require 'my-vm-multi-from)
+(require 'my-vm-menus)
 (require 'vm-rfaddons)
 
 ;; Need to load this so variables will be present for menus
@@ -19,19 +20,15 @@
 ;; Don't prompt me for my email address, it should be set
 (setq-default query-user-mail-address nil)
 
-;; No toolbar
-(setq-default vm-use-toolbar nil)
-
 ;; Select browser to use for urls
-(if is-ms-windows
-    ;;(setq vm-url-browser "c:\\Program Files\\Netscape\\Netscape\\netscp.exe")
-    ;;(setq vm-url-browser "c:\\Program Files\\Internet Explorer\\IEXPLORE.exe")
-    (setq vm-url-browser "c:\\Program Files\\mozilla.org\\Mozilla\\mozilla.exe")
-  )
+(cond
+ (is-ms-windows
+  (setq vm-url-browser "c:\\Program Files\\mozilla.org\\Mozilla\\mozilla.exe"))
 
-;; Mac OS X - use open command
-(setq vm-url-browser "open")
-
+ (is-darwin
+  ;; Mac OS X - use open command
+  (setq vm-url-browser "open"))
+)
 
 ;; Move to next message after deleting or killing
 (setq-default vm-move-after-deleting t)
@@ -246,91 +243,12 @@
 (setq-default vm-search-other-frames nil)
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; Hooks
-;;
-
-;; Called for composition buffers
-(defun my-vm-mail-mode-hook ()
-  "my vm-mail-mode hook."
-  (easy-menu-remove '("Lisp-Interaction"))
-  (mail-folder-compose-function)
-  (set-buffer-frame-title-format (concat "Compose: " (buffer-name)))
-  ;; Add cc field automatically for me if not already there
-  (save-excursion
-   (or (mail-position-on-field "CC" t)
-       (mail-set-header "CC" "")))
-  ;; Load all my aliases
-  (my-rebuild-mail-aliases)
-)
-
-;;(add-hook 'vm-mail-mode-hook 'my-vm-mail-mode-hook)
-(add-hook 'mail-setup-hook 'my-vm-mail-mode-hook)
-
-(defun my-vm-menu-setup-hook ()
-  "My vm-menu-setup-hook"
-
-  (if modify-menu
-      (progn
-;  (add-submenu '("Send")
-;	       '("Queuing..."
-;		 ["Send directly" (setq smtpmail-queue-mail nil)
-;		  :style radio
-;		  :selected (not smtpmail-queue-mail)]
-;		 ["Queue mail" (setq smtpmail-queue-mail t)
-;		  :style radio
-;		  :selected smtpmail-queue-mail]
-;		 ))
-
-;  (add-menu-button '("Send")
-;		 ["Send queued mail"
-;		  smtpmail-send-queued-mail (smtpmail-queued)])
-
-	(add-menu-button '("Send")
-			 ["Send queued mail"
-			  feedmail-run-the-queue (feedmail-mail-in-queue)])
-
-	(add-submenu '("Send")
-		     '("Forwarding Encapsulation..."
-		       ["None" (setq vm-forwarding-digest-type nil)
-			:style radio
-			:selected (eq vm-forwarding-digest-type nil)]
-		       ["Mime" (setq vm-forwarding-digest-type "mime")
-			:style radio
-			:selected (string-equal vm-forwarding-digest-type "mime")]
-		       ))
-	
-	(add-submenu '("Send")
-		     '("Bandwidth mode"
-		       ["Low" (vm-set-bandwidth-mode "low")
-			:style radio
-			:selected (string-equal "low"
-						vm-bandwidth-mode)]
-		       ["High" (vm-set-bandwidth-mode "high")
-			:style radio
-			:selected (string-equal "high"
-						vm-bandwidth-mode)]
-		       )
-		     )
-
-	(add-menu-button '("Folder")
-			 ["Expunge IMAP Messages"
-			  vm-expunge-imap-messages t]
-			 "Expunge POP Messages")
-	
-	;;(vm-add-maillists-menu)
-	)
-    )
-)
 
 (defun my-vm-add-virtual-key-bindings ()
   "Add keybindings to virtual folder creation functions."
 
   (local-set-key "VN" 'vm-create-virtual-folder-unread)
 )
-
-(add-hook 'vm-menu-setup-hook 'my-vm-menu-setup-hook)
 
 (defun vm-set-frame-title ()
   "Set the title of the current VM buffer"

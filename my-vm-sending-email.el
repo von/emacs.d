@@ -178,57 +178,27 @@
 
 (add-hook 'vm-mail-hook 'no-address-auto-fill)
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;; Signature inserting stuff
+;; Hooks
 ;;
 
-(defun insert-signature (file)
-  (let ((mail-signature-file file))
-    (mail-signature)))
-
-(defvar my-sig-dir "~/Mail/sigs"
-  "Where my signature files are.")
-
-(defvar my-sig-extension ".txt"
-  "File extension on signature files.")
-
-(easy-menu-define nil vm-mail-mode-map
-  "Allow insertion of a signature"
-  (generate-insert-signature-menu)))
-
-(defun generate-insert-signature-menu ()
-  "Generate menu for insertion of signatures."
-
-  (cons "Insert-signature..."
-	(mapcar
-	 (function
-	  (lambda(sig-file)
-	    (let ((entry (vector
-			  (replace-in-string
-			   (file-name-nondirectory sig-file)
-			   (concat my-sig-extension "$")
-			   "")
-			  (list 'insert-signature sig-file))
-			 ))
-	      entry
-	      )
-	    )
-	  )
-
-	 (directory-files my-sig-dir
-			  ;; Full path
-			  t
-			  ;; Don't match files starting with "."
-			  ;; (including directories)
-			  ;; Don't match files ending with "~"
-			  "^[^.].*[^~]$"
-			  ;; Sort
-		 t)
-)
-	)
+;; Called for composition buffers
+(defun my-vm-mail-mode-hook ()
+  "my vm-mail-mode hook."
+  (easy-menu-remove '("Lisp-Interaction"))
+  (mail-folder-compose-function)
+  (set-buffer-frame-title-format (concat "Compose: " (buffer-name)))
+  ;; Add cc field automatically for me if not already there
+  (save-excursion
+    (or (mail-position-on-field "CC" t)
+	(mail-set-header "CC" "")))
+  ;; Load all my aliases
+  (my-rebuild-mail-aliases)
   )
 
+(add-hook 'mail-setup-hook 'my-vm-mail-mode-hook)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

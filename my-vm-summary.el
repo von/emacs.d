@@ -38,20 +38,21 @@
 	 ("owner-security-internal@globus.org" . "white")
 	 ;;
 	 ;; ESG
-	 ("esg-admin@earthsystemgrid.org" . "DarkRed")
+	 ("esg-admin@earthsystemgrid.org" . "#A01010")
 	 ;;
 	 ;; Misc ANL/UC
-	 ("\\(cs-admin\\|staff-admin\\)@cs.uchicago.edu\\|\\(owner-mcs\\|owner-camp-seminars\\|owner-seminars\\|owner-disc\\|owner-unix-users\\)@mcs.anl.gov\\|owner-argonne-today@achilles.ctd.anl.gov" . "DarkRed")
+	 ("\\(cs-admin\\|staff-admin\\)@cs.uchicago.edu\\|\\(owner-mcs\\|owner-camp-seminars\\|owner-seminars\\|owner-disc\\|owner-unix-users\\)@mcs.anl.gov\\|owner-argonne-today@achilles.ctd.anl.gov" . "#A01010")
 	 ;;
 	 ;; PPDG
-	 ("\\(ppdg-admin\\|ppdg-jdl-admin\\)@ppdg.net" . "DarkRed")
+	 ("\\(ppdg-admin\\|ppdg-jdl-admin\\)@ppdg.net" . "#A01010")
 	 ("ppdg-siteaa-admin@ppdg.net\\|ppdg-cara-admin@ppdg.net" . "red")
 	 ;;
 	 ;; NMI
 	 ("owner-team@grids-center.org" . "DarkRed")
 	 ;;
 	 ;; IETF
-	 ("owner-ietf-krb-wg@achilles.ctd.anl.gov\\|owner-aaaarch@fokus.gmd.de\\|owner-ietf-pkix@mail.imc.org\\|owner-ietf-sacred@mail.imc.org\\|cfrg-admin@ietf.org" . "DarkRed")
+	 ("owner-ietf-pkix@mail.imc.org" . "#A01010")
+	 ("owner-ietf-krb-wg@achilles.ctd.anl.gov\\|owner-aaaarch@fokus.gmd.de\\|owner-ietf-sacred@mail.imc.org\\|cfrg-admin@ietf.org" . "DarkRed")
 	 ;;
 	 ;; Internet2
 	 ("owner-mace@internet2.edu\\|owner-hepki-tag@internet2.edu\\|owner-mace-opensaml-users@internet2.edu\\|owner-mw-announce@internet2.edu" . "DarkRed")
@@ -62,7 +63,7 @@
 	 ("lap-interest-owner@projectliberty.org" . "DarkRed")
 	 ;;
 	 ;; High-interest misc lists
-	 ("owner-announce@cs.uiuc.edu\\|owner-cryptography@wasabisystems.com" . "red")
+	 ("owner-announce@cs.uiuc.edu\\|owner-cryptography@wasabisystems.com\\|owner-cryptography@metzdowd.com" . "red")
 	 ;;
 	 ;; DSL
 	 ("owner-dsl@mcs.anl.gov\\|owner-dsl-core@mcs.anl.gov\\|owner-dsl-uc@mcs.anl.gov\\|dsl-admin@cs.uchicago.edu" . "pink")
@@ -71,19 +72,24 @@
 	 ("owner-doe-\\(sg\\|pma\\|ca\\)@george.lbl.gov" . "#FF00FF")
 	 ;;
 	 ;; Management lists
-	 ("owner-management@globus.org\\|owner-dsl-management@mcs.anl.gov\\|owner-ogsa-management@globus.org\\|owner-globus-ogsa-management@globus.org" . "orange")
+	 ("owner-management@globus.org\\|owner-dsl-management@mcs.anl.gov\\|owner-ogsa-management@globus.org\\|owner-globus-ogsa-management@globus.org\\|owner-dsl-project-leaders@mcs.anl.gov" . "orange")
 	 ;;
 	 ;; High-interest Globus lists
-	 ("\\(owner-python-discuss\\|owner-developers\\|owner-developer-discuss\\|owner-ogsa-alpha\\|owner-ogsa-developers\\|owner-gt3-developers-internal\\|owner-gsi-openssh\\|owner-ogsa-security\\|owner-ogsa-discuss\\)@globus.org" . "blue")
+	 ("\\(owner-python-discuss\\|owner-developers\\|owner-developer-discuss\\|owner-ogsa-alpha\\|owner-ogsa-developers\\|owner-gt3-developers-internal\\|owner-gsi-openssh\\|owner-ogsa-security\\|owner-ogsa-discuss\\|owner-announce\\|owner-security-announce\\)@globus.org" . "blue")
 	 ;;
 	 ;; Other Globus lists
 	 ("globus.org" . "DarkBlue")
 	 ;;
 	 ;; GGF High-interest lists
-	 ("\\(owner-security-wg\\|owner-ogsi-wg\\|owner-ogsa-sec-wg\\)@gridforum.org" . "green")
+	 ("\\(owner-security-wg\\|owner-authz-wg\\|owner-ogsa-sec-wg\\)@gridforum.org" . "green")
 	 ;;
 	 ;; Other GGF lists
 	 ("gridforum.org\\|ggf-testscripts-admin@cs.uchicago.edu" . "DarkGreen")
+	 )
+	;;
+	;; Flagged Spam
+	("X-Spam-Flag:"
+	 ("YES" . "DarkRed")
 	 )
 	;; This regex still doesn't work...
 	("\\(To:\\|Cc:\\|cc:\\)"
@@ -94,6 +100,22 @@
 	 ;; Me
 	 ("welch@mcs.anl.gov" . "white")
 	 )
+	;;
+	;; Maillist bounces
+	("To:"
+	 ("glbs-owner-security-announce@mcs.anl.gov" . "DarkRed")
+	 )
+	;;
+	;; Catch approval requests
+	("Subject:"
+	 ("APPROVE" . "white")
+	 )
+	;;
+	;; Subscription messages
+	("From:"
+	 ("Majordomo@Globus.org" . "DarkRed")
+	 )
+
 	)
       )
 

@@ -211,4 +211,11 @@
 	)
 )
 
+;; Do automorph when tabbing from headers to body
+(add-hook 'vm-mail-mode-hook
+	  '(lambda () (local-set-key [tab] 'vmpc-etab-header-or-tab-stop)))
+;; Or explicitly with C-c a
+(add-hook 'vm-mail-mode-hook
+	  '(lambda () (local-set-key "\C-ca" 'vmpc-automorph)))
+
 (provide 'my-vm-pcrisis)

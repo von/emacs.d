@@ -26,7 +26,11 @@
 		))
 
 ;;(setq vm-spool-files '("localhost:110:pass:welch:*"))
-(setq vm-spool-files '("imap:localhost:143:inbox:login:welch:*"))
+(setq vm-spool-files
+      '(
+	("mbox" "imap:localhost:143:inbox:login:welch:*" "inbox.crash")
+	("ncsa" "pop:pop.ncsa.uiuc.edu:110:apop:vwelch:*" "ncsa.crash")
+	))
 
 (setq smtpmail-smtp-server "localhost")
 

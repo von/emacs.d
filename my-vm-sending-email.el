@@ -6,6 +6,10 @@
 ;; String to append to subjects in my replies
 (setq-default vm-reply-subject-prefix "Re: ")
 
+;; Attibution string (should have CR)
+(setq vm-included-text-attribution-format "%F writes (%H %m %d, %y):
+")
+
 ;; Forwarded message subject
 (setq-default vm-forwarding-subject-format "Fwd: %s")
 

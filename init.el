@@ -193,9 +193,11 @@
     ;; Turn on permanent buffers
     (permanent-buffers-mode t))
 
-(if (boundp 'parsen-set-mode)
-    ;; Turn on paren highlighting
+;; Turn on paren highlighting
+(if (boundp 'paren-set-mode)
     (paren-set-mode 'paren))
+(if (boundp 'show-paren-mode)
+    (show-paren-mode t))
 
 ;; Make wsdl files invoke xml mode
 (setq auto-mode-alist

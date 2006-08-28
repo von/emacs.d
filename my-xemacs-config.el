@@ -12,9 +12,6 @@
 (if is-xemacs
     (progn
 
-      ;; Start gnuserv if available
-      (gnuserv-start)
-
       ;; Load pending-del if present
       ;; XXX - What does this do anyways?
       (require 'pending-del)

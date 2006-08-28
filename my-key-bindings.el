@@ -81,6 +81,10 @@
 (global-set-key [(meta up)] 'scroll-other-window-down-one-line)
 (global-set-key [(meta right)] 'scroll-other-window)
 
+; Set up so meta-v pastes (Mac)
+; meta-c seems unnecessary as just selecting text puts it into the clipboard.
+(global-set-key [(meta v)] 'clipboard-yank)
+
 (cond (is-xemacs
 
        ;; Control-x up pages up

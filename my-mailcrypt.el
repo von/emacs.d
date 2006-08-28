@@ -9,5 +9,7 @@
 
 (mc-setversion "gpg")
 
+(setq mc-gpg-path "/usr/local/bin/gpg")
+
 ;; Encrypt all outgoing messages with my key
 (setq mc-encrypt-for-me t)

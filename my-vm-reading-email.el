@@ -17,12 +17,23 @@
 ;; Message size limit for URLS scanning
 (setq-default vm-url-search-limit 100000)
 
+;; This is the default regexp modified to ignore trailing comma
+(setq-default vm-url-regexp "<URL:\\([^>\n]+\\)>\\|\\(\\(file\\|ftp\\|gopher\\|http\\|https\\|news\\|wais\\|www\\)://[^ 	\n\f
+\"<>|()]*[^ 	\n\f
+\"<>|.!?(){},]\\)\\|\\(mailto:[^ 	\n\f
+\"<>|()]*[^] 	\n\f
+\"<>|.!?(){},]\\)\\|\\(file:/[^ 	\n\f
+\"<>|()]*[^ 	\n\f
+\"<>|.!?(){},]\\)")
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Fill presentation buffers
 ;;
 
-(setq vm-fill-paragraphs-containing-long-lines 78)
+;; nil == don't fill
+;; numeric value == lines longer than N are filled
+(setq vm-fill-paragraphs-containing-long-lines nil)
 
 (defun my-vm-fill-line (arg)
   "Return nil if line should be filled, t otherwise. Use to avoid filling cited lines. Meant to be used a fill-paragraph-function."

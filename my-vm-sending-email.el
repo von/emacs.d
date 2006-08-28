@@ -50,6 +50,7 @@
 			    "Content-Class:"
 			    "thread-index:"
 			    "Importance:"
+			    "DomainKey-Signature:"
 			    )))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -67,7 +68,7 @@
 ;; Modified to do esmtpmail by Von Welch (Oct-2003)
 (defun feedmail-buffer-to-esmtpmail (prepped errors-to addr-listoid)
   "Function which actually calls esmtpmail-via-smtp to send buffer as e-mail."
-  ;; I'm not sure smtpmail.el is careful about the following
+  ;; I'm not sure smtpmail.el is careful ab the following
   ;; return value, but it also uses it internally, so I will fear
   ;; no evil.
   (feedmail-say-debug ">in-> feedmail-buffer-to-esmtpmail %s" addr-listoid)
@@ -148,7 +149,7 @@
 (defun feedmail-insert-draft-menu ()
   "Add a edit drafts menu to the Send menu."
 
-  (if modify-menu
+  (if (and modify-menu is-xemacs)
       (let ((menu (feedmail-generate-draft-menu)))
 	(add-submenu '("Send")
 		     menu
@@ -162,21 +163,45 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
+
+(defun compose-mail-fill-setup ()
 ;; Don't autofill headers incomposition
 ;; From: Tudor Hulubei
 ;;       http://www.hulubei.net/tudor/configuration/.emacs
-
-;; Hmmm, not sure this is working...
-
 ;;; Without this, the address fields will be auto-filled, resulting in
 ;;; weird behaviour.  Thanks to WJCarpenter <bill@carpenter.org> for
 ;;; suggesting this fix.
-(defun no-address-auto-fill ()
   (make-local-variable 'auto-fill-inhibit-regexp)
-  (setq auto-fill-inhibit-regexp "\\(resent-\\)?\\(To:\\|CC:\\|Bcc:\\)"))
+  (setq auto-fill-inhibit-regexp 
+	(regexp-opt '("To:" "CC:" "Bcc:" "resent-To:"
+		      ;; Four spaces is for continuation lines after the
+		      ;; headers above. Best hack I can think of.
+		      "    ")))
+  )
 
-(add-hook 'vm-mail-hook 'no-address-auto-fill)
+(add-hook 'vm-mail-mode-hook 'compose-mail-fill-setup)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;(require 'supercite)
+;;(add-hook 'mail-citation-hook 'sc-cite-original)
+
+;;(remove-hook 'vm-mail-mode-hook 'u-vm-color-fontify-buffer)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Where to save a copy of outgoing email
+;;
+
+(defun my-mail-archive-file-name ()
+  (let ((date-elements (decode-time)))
+    (expand-file-name
+     (format "%s/drafts/%02d-%02d"
+	     vm-folder-directory
+	     ;; Hack, subtract 2000 from year to get two digits
+	     (- (nth 5 date-elements) 2000)
+	     (nth 4 date-elements)
+     ))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -190,10 +215,14 @@
   (easy-menu-remove '("Lisp-Interaction"))
   (mail-folder-compose-function)
   (set-buffer-frame-title-format (concat "Compose: " (buffer-name)))
-  ;; Add cc field automatically for me if not already there
+  ;; Set up some headers
   (save-excursion
+    ;; Add cc field automatically for me if not already there
     (or (mail-position-on-field "CC" t)
-	(mail-set-header "CC" "")))
+	(mail-set-header "CC" ""))
+    ;; Set FCC
+    (mail-set-header "FCC" (my-mail-archive-file-name))
+    )
   ;; Load all my aliases
   (my-rebuild-mail-aliases)
   )

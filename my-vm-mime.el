@@ -18,6 +18,7 @@
 		("\\.tex$" . "text/plain")
 		("\\.html$" . "text/html")
 		("\\.htm$" . "text/html")
+		("\\.wsdl$" . "text/wsdl")
 		("\\.doc$" . "application/msword")
 		("\\.xls$" . "application/x-msexcel")
 		("\\.pdf$" . "application/pdf")
@@ -28,6 +29,10 @@
 		("\\.gif$" . "image/gif")
 		("\\.bmp$" . "image/bitmap")
 		("\\.zip$" . "application/zip")
+		("\\.pgp$" . "text/pgp-encrypted")
+		("\\.graffle$" . "application/graffle")
+		;; Following is a bad guess
+		("\\.wav$" . "application/sound")
 		))
 
 ;; Guess mime's type using filename and vm-mime-attachment-auto-type-alist
@@ -36,23 +41,25 @@
 ;; Don't decode messages when previewing them
 (setq-default vm-mime-decode-for-preview nil)
 
+(setq vm-mime-type-converter-alist
+      '(
+	("text/html" "text/plain" "html2text -nobs")
+	))
+      
 ;; Don't display these mime types myself
 (setq-default vm-mime-internal-content-type-exceptions
 	      '(
-		;;"text/html"
+		"text/html"
 		;;"image/jpeg"
 		;;"image/gif"
 		)
 	      )
-;;
-;; Use W3 for html
-(require 'w3)
 
 ;; Don't display these attachments automatically
 (setq-default vm-auto-displayed-mime-content-type-exceptions
 	      '(
-		"text/html"
-		"image/bmp"
+		;;"text/html"
+		"image"
 		)
 	      )
 
@@ -84,7 +91,7 @@
 	("application"       "open" "%f")
 	("video"             "open" "%f")
 	("image"             "open" "%f")
-	("text"              "open" "%f")
+	("text/plain"        "open" "%f")
 	)
       )
 
@@ -122,10 +129,10 @@
 
 ;;
 ;; Use binary to mime encoding
-(setq vm-mime-base64-decoder-program "mmencode")
-(setq vm-mime-base64-decoder-switches '("-b" "-u"))
-(setq vm-mime-base64-encoder-program "mmencode")
-(setq vm-mime-base64-encoder-switches '("-b"))
+;(setq vm-mime-base64-decoder-program "mmencode")
+;(setq vm-mime-base64-decoder-switches '("-b" "-u"))
+;(setq vm-mime-base64-encoder-program "mmencode")
+;(setq vm-mime-base64-encoder-switches '("-b"))
 
 ;;
 ;; End Mime Configuration

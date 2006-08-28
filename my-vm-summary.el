@@ -47,6 +47,11 @@
 (copy-face 'default 'summary-interesting-face)
 (set-face-foreground 'summary-interesting-face "red")
 
+;; Medium interesting lists
+(copy-face 'default 'summary-med-interest-face)
+(set-face-foreground 'summary-med-interest-face "#FF00FF")
+
+
 ;; Low-interest mail lists
 (copy-face 'default 'summary-low-interest-face)
 (set-face-foreground 'summary-low-interest-face "DarkGreen")
@@ -55,10 +60,6 @@
 ;; DSL Email
 (copy-face 'default 'summary-dsl-face)
 (set-face-foreground 'summary-dsl-face "pink")
-
-;; DOESG Email
-(copy-face 'default 'summary-doesg-face)
-(set-face-foreground 'summary-doesg-face "#FF00FF")
 
 ;; Management email
 (copy-face 'default 'summary-management-face)
@@ -95,7 +96,7 @@
 	 )
 	;; Catch stuff to me
 	("\\(To\\|CC\\|Cc\\|cc\\):"
-	 ("welch@mcs.anl.gov" . summary-me-face)
+	 ("welch@mcs.anl.gov\\|vwelch@ncsa.uiuc.edu\\|von@vwelch.com" . summary-me-face)
 	 )
 	;; Stuff from me
 	("From:"
@@ -126,11 +127,14 @@
 	 ("ppdg.net" . summary-non-critical-face)
 	 ;;
 	 ;; NMI
-	 ("owner-team@grids-center.org" . summary-low-interest-face)
+	 ("owner-team@grids-center.org" . summary-med-interest-face)
 	 ;;
 	 ;; IETF
 	 ("owner-ietf-pkix@mail.imc.org" . summary-non-critical-face)
-	 ("owner-ietf-krb-wg@achilles.ctd.anl.gov\\|owner-aaaarch@fokus.gmd.de\\|owner-ietf-sacred@mail.imc.org\\|cfrg-admin@ietf.org" . summary-low-interest-face)
+	 ("kitten-bounces@lists.ietf.org" . summary-non-critical-face)
+	 ("cfrg-bounces@ietf.org" . summary-non-critical-face)
+	 ("easycert-bounces@machshav.com" . summary-non-critical-face)
+	 ("owner-ietf-krb-wg@mailhost.anl.gov\\|owner-ietf-krb-wg@achilles.ctd.anl.gov\\|owner-aaaarch@fokus.gmd.de\\|owner-ietf-sacred@mail.imc.org\\|cfrg-admin@ietf.org\\|owner-ietf-cat-wg@lists@Standford.edu" . summary-low-interest-face)
 	 ;;
 	 ;; Internet2
 	 ("internet2.edu" . summary-low-interest-face)
@@ -141,20 +145,28 @@
 	 ("projectliberty.org" . summary-low-interest-face)
 	 ("discuss-gnuradio" . summary-low-interest-face)
 	 ("owner-aaaarch@fokus.fraunhofer.de" . summary-low-interest-face)
+	 ("owner-macos-users@ncsa.uiuc.edu" . summary-low-interest-face)
+	 ("owner-tagpma-general@mail.canarie.ca" . summary-low-interest-face)
+	 ;;
+	 ;; Med Misc
+	 ("owner-ip@v2.listbox.com" . summary-med-interest-face)
+	 ("owner-comp-pol@ncsa.uiuc.edu" . summary-med-interest-face)
 	 ;;
 	 ;; High-interest misc lists
-	 ("owner-announce@cs.uiuc.edu\\|owner-cryptography@wasabisystems.com\\|owner-cryptography@metzdowd.com\\|owner-ip@v2.listbox.com" . summary-interesting-face)
+	 ("owner-announce@cs.uiuc.edu\\|owner-cryptography@wasabisystems.com\\|owner-cryptography@metzdowd.com" . summary-interesting-face)
 	 ;;
 	 ;; TeraGrid Lists
-	 ("owner-security-wg@teragrid.org\\|owner-ncsatg@ncsa.uiuc.edu" . summary-interesting-face)
-	 ("owner-wg@teragrid.org" . summary-low-interest-face)
+	 ("owner-ncsatg@ncsa.uiuc.edu" . summary-interesting-face)
+	 ("@teragrid.org" . summary-interesting-face)
 	 ;;
+	 ;; Open Science Grid lists
+	 ("OPENSCIENCEGRID.ORG" . summary-interesting-face)
 	 ;;
 	 ;; DSL
 	 ("owner-dsl@mcs.anl.gov\\|owner-dsl-developers@mcs.anl.gov\\|owner-dsl-core@mcs.anl.gov\\|owner-dsl-uc@mcs.anl.gov\\|dsl-admin@cs.uchicago.edu\\|owner-dsl-uchicago-staff@mcs.anl.gov" . summary-dsl-face)
 	 ;;
 	 ;; DOESG
-	 ("owner-doe-\\(sg\\|pma\\|ca\\)@george.lbl.gov" . summary-doesg-face)
+	 ;;("owner-doe-\\(sg\\|pma\\|ca\\)@george.lbl.gov" . summary-doesg-face)
 	 ;;
 	 ;; High-interest Globus lists
 	 ("\\(owner-developers\\|owner-ogsa-developers\\|owner-gt3-developers-internal\\|owner-gsi-openssh\\|owner-ogsa-security\\|owner-ogsa-discuss\\|owner-announce\\|owner-security-announce\\|owner-cas-discuss\\|perf\\|owner-board\\)@globus.org" . summary-high-interest-globus-face)
@@ -166,14 +178,14 @@
 	 ("\\(owner-security-wg\\|owner-authz-wg\\|owner-ogsa-sec-wg\\|owner-ogsa-authz\\|owner-arrg-rg\\|owner-security-area\\|owner-gf-chairs\\|owner-wg-all\\)@gridforum.org" . summary-high-interest-ggf-face)
 	 ;;
 	 ;; Other GGF lists
-	 ("gridforum.org\\|ggf-testscripts-admin@cs.uchicago.edu" . summary-ggf-face)
+	 ("ggf.org\\|gridforum.org\\|ggf-testscripts-admin@cs.uchicago.edu" . summary-ggf-face)
 	 ("egrid@egrid.org" .summary-ggf-face)
 	 ;;
 	 ;; Emsl stuff
 	 ("owner-hpcs2-users@emsl.pnl.gov" . summary-low-interest-face)
 	 ;;
 	 ;; security@ncsa
-	 ("owner-security@ncsa.uiuc.edu" . summary-low-interest-face)
+	 ("owner-security@ncsa.uiuc.edu" . summary-med-interest-face)
 	 )
 	;;
 	;; A lot of spam seems to use my capitalized NCSA address
@@ -182,7 +194,7 @@
 	 )
 	;; Oasis stuff seems to use this header
 	("Delivered-To:"
-	 ("\\(was\\|security-services\\|xacml\\|saml-dev\\)@lists.oasis-open.org" . summary-interesting-face)
+	 ("\\(was\\|security-services\\|xacml\\|saml-dev\\)@lists.oasis-open.org" . summary-low-interest-face)
 	 ("lists.oasis-open.org" . summary-low-interest-face)
 	 )
 	;; And Internet2 uses List-Id:
@@ -191,6 +203,8 @@
 	 ("mace.internet2.edu" . summary-interesting-face)
 	 ("mw-e2ed-core.internet2.edu" . summary-interesting-face)
 	 ("internet2.edu" . summary-low-interest-face)
+	 ;; As does IP
+	 ("ip@v2.listbox.com" . summary-med-interest-face)
 	 )
 	;; This regex still doesn't work...
 	("\\(To\\|Cc\\|cc\\):"

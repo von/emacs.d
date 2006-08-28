@@ -12,12 +12,12 @@
 ;; No toolbar
 (setq-default vm-use-toolbar nil)
 
-
 (defun my-vm-summary-menu-setup ()
   "Set up main VM menu for summary mode."
 
   (if modify-menu
       (progn
+	;; XXX This doesn't add to existing menus
 	(easy-menu-add-item nil '("Send")
 			    ["Send queued mail"
 			     feedmail-run-the-queue
@@ -33,30 +33,46 @@
 			       :selected (string-equal vm-forwarding-digest-type "mime")]
 			      ))
 	
-	(add-submenu '("Send")
-		     '("Bandwidth mode"
-		       ["Low" (vm-set-bandwidth-mode "low")
-			:style radio
-			:selected (string-equal "low"
-						vm-bandwidth-mode)]
-		       ["High" (vm-set-bandwidth-mode "high")
-			:style radio
-			:selected (string-equal "high"
-						vm-bandwidth-mode)]
-		       )
-		     )
+	(easy-menu-add-item nil '("Send")
+			    '("Bandwidth mode"
+			      ["Low" (vm-set-bandwidth-mode "low")
+			       :style radio
+			       :selected (string-equal "low"
+						       vm-bandwidth-mode)]
+			      ["High" (vm-set-bandwidth-mode "high")
+			       :style radio
+			       :selected (string-equal "high"
+						       vm-bandwidth-mode)]
+			      )
+			    )
 
-	(add-menu-button '("Folder")
-			 ["Expunge IMAP Messages"
-			  vm-expunge-imap-messages t]
-			 "Expunge POP Messages")
-	
 	;;(vm-add-maillists-menu)
 	)
     )
 )
 
-(add-hook 'vm-summary-mode-hook 'my-vm-summary-menu-setup)
+(add-hook 'vm-menu-setup-hook 'my-vm-summary-menu-setup)
+
+(defun my-vm-set-dispose-popup-menu ()
+  "Make the VM dispose menu the popup menu."
+
+  ;; XXX For some reason the first message always has the menu with
+  ;; all the items inactive
+  (cond
+   (is-gnu-emacs
+    (or (boundp 'my-vm-dispose-menu-keymap)
+	(progn
+	  (setq my-vm-dispose-menu-keymap (make-sparse-keymap))
+	  (easy-menu-define my-vm-dispose-menu-keymap
+	    nil nil vm-menu-dispose-menu)))
+    (setq mode-popup-menu my-vm-dispose-menu-keymap)
+    )
+   (t
+    (setq mode-popup-menu vm-menu-dispose-menu))
+   )
+  )
+
+(add-hook 'vm-presentation-mode-hook 'my-vm-set-dispose-popup-menu)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -77,31 +93,34 @@
   "Generate menu for insertion of signatures."
 
   (cons "Insert-signature..."
-	(mapcar
-	 (function
-	  (lambda(sig-file)
-	    (let ((entry (vector
-			  (replace-in-string
-			   (file-name-nondirectory sig-file)
-			   (concat my-sig-extension "$")
-			   "")
-			  (list 'insert-signature sig-file))
-			 ))
-	      entry
+	(if
+	    (file-exists-p my-sig-dir)
+	    (mapcar
+	     (function
+	      (lambda(sig-file)
+		(let ((entry (vector
+			      (replace-in-string
+			       (file-name-nondirectory sig-file)
+			       (concat my-sig-extension "$")
+			       "")
+			      (list 'insert-signature sig-file))
+			     ))
+		  entry
+		  )
+		)
 	      )
-	    )
+	     
+	     (directory-files my-sig-dir
+			      ;; Full path
+			      t
+			      ;; Don't match files starting with "."
+			      ;; (including directories)
+			      ;; Don't match files ending with "~"
+			      "^[^.].*[^~]$"
+			      ;; Sort
+			      t)
+	     )
 	  )
-
-	 (directory-files my-sig-dir
-			  ;; Full path
-			  t
-			  ;; Don't match files starting with "."
-			  ;; (including directories)
-			  ;; Don't match files ending with "~"
-			  "^[^.].*[^~]$"
-			  ;; Sort
-			  t)
-	 )
 	)
   )
 

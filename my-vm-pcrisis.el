@@ -20,10 +20,20 @@
 
 (defvar von-vmpc-majordomo-passwords
   '(
-    ("security-announce" "ssapliame")
+    ; GGF
     ("security-area" "ggfsec")
+    ("ogsa-authz" "ssapliame")
+    ; Globus
+    ("security-announce" "ssapliame")
     ("security-internal" "evorppa")
+    ("security" "evorppa")
+    ("gridshib-beta" "evorppa")
+    ("security-report" "ssapliame")
+    ; NCSA
     ("otp" "ache1Fo")
+    ("Cyberarch-wg" "ache1Fo")
+    ("Gridshib" "ache1Fo")
+    ("srd" "ache1Fo")
     )
   "*Alist of mailling list names and passwords for use by von-vmpc-process-majordomo-request.")
 
@@ -71,8 +81,8 @@
    ;; Subscription confirmation
    ((save-excursion
       (re-search-forward
-       ;; auth 1afc1ee9 subscribe security-announce globus@vwelch.com
-       "auth \\(\\S-+\\) subscribe \\(\\S-+\\) \\(\\S-+\\)"
+       ;; auth 1afc1ee9 subscribe security-announce "Von Welch" globus@vwelch.com
+       "auth \\(\\S-+\\) subscribe \\(\\S-+\\) \\(.*\\)$"
        ;; No limit and no error if no found
        (point-max) t)
       )
@@ -93,8 +103,13 @@
 (setq vmpc-any-recipient
       (regexp-opt '("To:" "CC:")))
 
+;; Receiver or Sender
+(setq vmpc-any-address
+      (regexp-opt '("To:" "CC:" "From:")))
+
 (setq vmpc-conditions
       '(
+	;; Order important, only first match is used
 	("to-mcs"
 	 (vmpc-header-match "To"
 			    (regexp-quote mcs-address)))
@@ -102,13 +117,21 @@
 	 (vmpc-header-match "From"
 			    (regexp-quote mcs-address)))
 	("to-ncsa"
-	 (vmpc-header-match "To"
+	 (vmpc-header-match vmpc-any-address
 			    (regexp-quote ncsa-address)))
+	("to-family"
+	 (vmpc-header-match "To"
+			    (regexp-opt '(
+					  "ljwelch@comcast.net"
+					  "lcwelch@gforcecable.com"
+					  "kent@derstrudel.org"
+					  "deejaywelch@att.net"
+					  ))))
+	("personal"
+	 (vmpc-header-match "to"
+			    (regexp-quote personal-address)))
 	("to-vwelch"
 	 (vmpc-header-match "To" "vwelch.com"))
-	("to-personal"
-	 (vmpc-header-match "To"
-			    (regexp-quote personal-address)))
 	("to-globus"
 	 (vmpc-header-match vmpc-any-recipient "globus.org" ", "))
 	("to-gridforum"
@@ -122,13 +145,10 @@
 			    (regexp-opt '(
 					  "doe-sg-ca@george.lbl.gov"
 					  "doe-sg-pma@george.lbl.gov"
-					  "doe-sg-tt@george.lbl.gov"
-					  "doe-sg-users@george.lbl.gov"
 					  )) ", "))
 	;; Other lists that I should use my MCS address for
 	("to-use-mcs-list"
 	 (vmpc-header-match vmpc-any-recipient
-			    (regexp-quote "shibboleth-dev@internet2.edu")
 			    (regexp-quote "ietf-cat-wg@lists.Stanford.EDU")
 			    ))
 	("mime-base64"
@@ -180,21 +200,20 @@
 (setq vmpc-replies-alist
       ;; Only first match is evaluated
       '(
-	("to-globus" "mcs")
 	("to-use-mcs-list" "mcs")
-	("from-mcs" "mcs")
-	("to-doesg" "mcs")
+	;;("from-mcs" "mcs")
 	("to-ncsa" "ncsa")
-	("to-personal" "personal")
+	("personal" "personal")
+	("to-vwelch" "personal")
 	("majordomo-request" "majordomo-respond")
 	)
 )
 
+
 (setq vmpc-automorph-alist
       '(
-	("to-globus" "mcs")
-	("to-doesg" "mcs")
 	("to-use-mcs-list" "mcs")
+	("to-family" "personal")
 	)
 )
 
@@ -207,7 +226,8 @@
 	;; to a text message
 	("mime-base64" "mime-encode")
 	("plain-msg" "plain-encode")
-	("to-personal" "personal")
+	("personal" "personal")
+	("to-vwelch" "personal")
 	)
 )
 
@@ -217,5 +237,8 @@
 ;; Or explicitly with C-c a
 (add-hook 'vm-mail-mode-hook
 	  '(lambda () (local-set-key "\C-ca" 'vmpc-automorph)))
+
+;; Do automorph just before sending (should have confirm on for this)
+(add-hook 'vm-mail-send-hook 'vmpc-automorph)
 
 (provide 'my-vm-pcrisis)

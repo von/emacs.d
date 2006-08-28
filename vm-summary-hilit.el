@@ -136,13 +136,20 @@ appearance of the color name in vm-summary-hilit-alist."
 	    (if (string-match (car a) header)
 		(progn
 		  (vm-summary-set-extent-face
-		   (make-extent (+ (vm-su-start-of m) 1)
+		   (vm-summary-make-exerlay (+ (vm-su-start-of m) 1)
 				(- (vm-su-end-of m) 1)
 				vm-summary-buffer)
 		   (cdr a))
 		  (setq ah nil al nil))))
 	  (setq ah (cdr ah))))
       (setq al (cdr al)))))
+
+(defun vm-summary-make-exerlay (startpos endpos buffer)
+  "Returns a newly created exerlay spanning from STARTPOS to ENDPOS in the
+current buffer."
+  (if vmpc-xemacs-p
+      (make-extent startpos endpos buffer)
+    (make-overlay startpos endpos buffer)))
 
 (defun vm-summary-set-extent-face (exerlay newface)
   "Sets the face used by EXERLAY to NEWFACE."

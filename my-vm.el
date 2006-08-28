@@ -61,16 +61,8 @@
 ;; Don't delete empty folders
 (setq-default vm-default-empty-folders nil)
 
-;; Set up points to my mail box and folders
-(setq-default vm-folder-directory "~/Mail/")
-
-;; Save a copy of all outgoing email
-(setq-default mail-archive-file-name (expand-file-name
-				      (concat vm-folder-directory
-					      "outbox")))
-
-;; Where my aliases are
-(setq-default mail-abbrev-mailrc-file "~/Mail/mail_aliases")
+;; Ask before creating new folders
+(setq-default vm-confirm-new-folders t)
 
 ;; Automatically delete messages after saving or archiving
 (setq-default vm-delete-after-archiving t)
@@ -122,6 +114,7 @@
 
 		("Undeleted" (("mbox") (not (deleted))))
 
+		("Marked" (("mbox") (marked)))
 		("From Steve"
 		 (("mbox") (author "tuecke@mcs.anl.gov")))
 		("From Ian"
@@ -135,9 +128,11 @@
 		 (("mbox") (label "print")))
 		("To be read"
 		 (("mbox") (label "read")))
-
 		("SPAM"
-		 (("mbox" "spam")
+		 ;; Don't cover things in spam folder since they
+		 ;; results in the folder being read then changed
+		 ;; on disk when new spam comes in
+		 (("mbox")
 		  (or
 		   (header "X-Spam-Flag: YES")
 		   (header "X-NCSA-MailScanner: Found to be infected")
@@ -206,10 +201,6 @@
 		 (("ncsa")
 		  (header "Sender: owner-security@ncsa.uiuc.edu")
 		  ))
-		("NCSA Security Monitoring"
-		 (("ncsa-sec-monitoring")
-		  (header "Sender: owner-security@ncsa.uiuc.edu")
-		  ))
 		("Mail Cruft"
 		 (("mbox")
 		  (or
@@ -222,20 +213,29 @@
 		  (or
 		   (header "Sender: owner-ip@v2.listbox.com")
 		   )))
+		("Personal"
+		 (("mbox")
+		  (recipient "vwelch.com")
+		  ))
+		("GridShib"
+		 (("gridshib")
+		  (header "Sender: owner-gridshib@ncsa.uiuc.edu")
+		  ))
 		)
 	      )
 
 ;;
 ;; Set frame sizes.
 ;;
-;; Make composition frames the same size as my xterms
+;; Make composition frames the same size as my xterms and folder frames
+;; the height of the screen
 (setq-default vm-frame-parameter-alist '(
 					 ;; Reply and compose frames
 					 (composition ((height . 26)))
 					 (composition ((edit . 26)))
 					 (completion ((height . 26)))
 					 ;; visiting folder frames
-					 (folder ((height . 59)))
+					 (folder ((height . 52)))
 					 )
 )
 
@@ -273,17 +273,9 @@
 ;;
 ;; Mailcrypt
 ;;
-
-(defun my-vm-mc-install-read-mode ()
-  "Install mc-read-mode in mc and preserve vm popup menu"
-
-  ;; Install MC stuff and then rebind mouse-3 to vm menu
-  (mc-install-read-mode)
-  (setq mode-popup-menu vm-menu-dispose-menu)
-)
   
 (add-hook 'vm-mail-mode-hook 'mc-install-write-mode)
-(add-hook 'vm-mode-hook 'my-vm-mc-install-read-mode)
-(add-hook 'vm-summary-mode-hook 'my-vm-mc-install-read-mode)
-(add-hook 'vm-virtual-mode-hook 'my-vm-mc-install-read-mode)
+(add-hook 'vm-mode-hook 'mc-install-read-mode)
+(add-hook 'vm-summary-mode-hook 'mc-install-read-mode)
+(add-hook 'vm-virtual-mode-hook 'mc-install-read-mode)
 

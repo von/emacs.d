@@ -8,6 +8,10 @@
   "Reload mail aliases from bbdb and my aliases file."
 
   (interactive)
+  ;; This gets rid of other abbrevs and also keeps us from building
+  ;; an infinitely long list of abbrev by adding each time this function
+  ;; is run.
+  (kill-all-abbrevs)
   (if is-xemacs
       (rebuild-mail-aliases mail-abbrev-mailrc-file)
     (rebuild-mail-abbrevs mail-abbrev-mailrc-file)
@@ -80,6 +84,19 @@ be overwritten if it already exists."
     (insert (concat header ": " string))
     )
   )
+
+(defun mail-get-from ()
+  "Get the contents of the From field or return default From user if not present."
+  (interactive)
+  (save-excursion
+    (if (not (mail-position-on-field "From" t))
+	;; No From field, return default
+	user-mail-address
+      ;; Move to begining of line and parse it
+      (beginning-of-line)
+      (vm-match-header)
+      (vm-matched-header-contents)))
+)
 
 (defun mail-set-from (string)
   "Insert a From:, Reply-To: and BCC: address into a piece of mail."
@@ -175,7 +192,43 @@ A value of nil indicates that no limit should be set."
 )
 
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Smime functions
+;;
+
+(defun vm-smime-sign-message ()
+  "Sign the current message."
+
+  (interactive)
+  (let ((body-start (mail-text-start))
+	(body-end (point-max))
+	;; Get address, stripping the human-readable part
+	(address (nth 1 (funcall vm-chop-full-name-function (mail-get-from))))
+	)
+    (save-excursion
+      ;; Got to start of message so we insert signature there
+      (goto-char body-start)
+      (smime-sign-region body-start body-end
+			 (or (smime-get-key-by-email address)
+			     (error "No key for address %s" address)))
+      )
+    ;; XXX Need to move content-type header into headers somehow
+    ;;     and integrate with VM mime encoding
+    )
+)
+
+(defun vm-smime-verify-message ()
+  "Verify the signature on the current message."
+
+  (interactive)
+  (let ((body-start (mail-text-start))
+	;; XXX this gets to end of buffer not message
+	(body-end (point-max))
+	)
+    (smime-verify-region body-start body-end)
+    )
+)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (provide 'my-vm-funcs)

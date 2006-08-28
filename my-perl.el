@@ -13,31 +13,33 @@
 		)
 	      auto-mode-alist))
 
-;; Perl
-;; <error> at <file> line <num>
-(setq perl-compilation-regexp-alist
-      '(("[^\n]* at \\([^ ]+\\) line \\([0-9]+\\)" 1 2)))
+;; XXX This is breaking on Mac OS 10.4
+;; ;; Perl
+;; ;; <error> at <file> line <num>
+;; (setq perl-compilation-regexp-alist
+;;       '(("[^\n]* at \\([^ ]+\\) line \\([0-9]+\\)" 1 2)))
 
-;; XXX should make value local...
-(cond ((boundp 'compilation-error-regexp-alist-alist) ;; xemacs 20.x
-       (setq compilation-error-regexp-alist-alist
-	     (cons (cons 'perl perl-compilation-regexp-alist)
-			  compilation-error-regexp-alist-alist))
-       (compilation-build-compilation-error-regexp-alist))
+;; ;; XXX should make value local...
+;; (cond ((and (boundp 'compilation-error-regexp-alist-alist)
+;; 	    (functionp 'compilation-build-compilation-error-regexp-alist))
+;;        (setq compilation-error-regexp-alist-alist
+;; 	     (cons (cons 'perl perl-compilation-regexp-alist)
+;; 			  compilation-error-regexp-alist-alist))
+;;        (compilation-build-compilation-error-regexp-alist))
 
-      ((boundp 'compilation-error-regexp-alist) ;; xmeacs 19.x
-       (setq compilation-error-regexp-alist
-	     (cons perl-compilation-regexp-alist
-		   compilation-error-regexp-alist))
-       )
-      )
+;;       ((boundp 'compilation-error-regexp-alist) ;; xmeacs 19.x
+;;        (setq compilation-error-regexp-alist
+;; 	     (cons perl-compilation-regexp-alist
+;; 		   compilation-error-regexp-alist))
+;;        )
+;;       )
 
 (defun my-perl-mode-init()
   "My Perl Mode init"
 
   (make-menubar-local)
 
-  (if modify-menu
+  (if (and modify-menu is-xemacs)
       (add-menu-button '("Perl")
 		       ["Comment out region" comment-region (region-exists-p)]
 		       )
@@ -48,7 +50,7 @@
   (setq cperl-indent-level 2)
   (setq tab-width 8)
 
-  (if (and modify-menu
+  (if (and modify-menu is-xemacs
 	   (string-match mode-name "CPerl"))
       (progn
 	(add-submenu '("Perl") '("Identation"

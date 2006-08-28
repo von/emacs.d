@@ -42,7 +42,7 @@
        ;; Standard text
        (set-face-foreground 'default "white")
        (set-face-background 'default "black")
-       ;;(set-face-font 'default (make-font-specifier "Courier New:Regular:8::Western"))
+       (set-cursor-color "red")
        ;;
        ;; Modeline
        (set-face-foreground 'modeline "black")

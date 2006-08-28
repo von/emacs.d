@@ -57,7 +57,7 @@
   (c-toggle-auto-hungry-state 1)
 
   
-  (if modify-menu
+  (if (and modify-menu is-xemacs)
       (progn
 	(add-menu-button '("C")
 			 ["Edit Comment" c-comment-edit (within-c-comment-p)])
@@ -96,7 +96,7 @@
 (defun my-c-comment-mode-init()
   "My C Comment Mode init"
 
-  (cond (modify-menu
+  (cond ((and modify-menu is-xemacs)
 	 (make-menubar-local)
 	 
 	 (delete-menu-item '("File"))

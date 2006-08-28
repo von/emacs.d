@@ -15,7 +15,7 @@
     (set variable t)))
 
 (cond
- (modify-menu
+ ((and modify-menu is-xemacs)
   ;; Remove Default Options menu
   (delete-menu-item '("Options"))
        

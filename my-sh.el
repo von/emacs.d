@@ -16,7 +16,7 @@
    sh-indentation 2
    )
 
-  (if modify-menu
+  (if (and modify-menu is-xemacs)
       (progn
 	(add-submenu '("Shell-Script") '("Identation"
 					 ["2" (setq sh-indentation 2)

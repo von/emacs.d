@@ -25,7 +25,7 @@
   (setq vc-checkout-switches save-switches)
 )
 
-(if (and modify-menu (boundp 'vc-mode))
+(if (and modify-menu is-xemacs (boundp 'vc-mode))
     (add-menu-button '("Tools" "VC")
 		     ["Checkout for Export" vc-co-export vc-mode nil]
 		     "Show status of"
@@ -37,7 +37,7 @@
 ;;;
 ;;; ChangeLog Stuff
 ;;;
-(if modify-menu
+(if (and modify-menu is-xemacs)
     (add-menu-button '("Tools")
 		     ["ChangeLog Entry" add-change-log-entry-other-window t]
 		     "Compare"
@@ -88,7 +88,7 @@
 )
   
 
-(if modify-menu
+(if (and modify-menu is-xemacs)
     (add-menu-button '("Tools") '("CVS"
 				  ["Changelog-commit" cvs-mode-changelog-commit
 				   (and (file-exists-p "CVS")

@@ -71,7 +71,7 @@
 (global-set-key "\C-cm" 'moo-ncsa)
 
 
-(if modify-menu
+(if (and modify-menu is-xemacs)
     (progn
       (add-menu-button '("Tools") ["Mud" mud t])
       (add-menu-button '("Tools") ["NCSA" moo-ncsa t])

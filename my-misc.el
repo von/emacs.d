@@ -130,5 +130,10 @@ the whole buffer is searched."
       )
 )
 
+(defun delete-to-end-of-buffer()
+  (interactive)
+
+  (kill-region (point) (point-max))
+)
 
 (provide 'my-misc)

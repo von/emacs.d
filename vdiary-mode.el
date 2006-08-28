@@ -7,13 +7,25 @@
 (require 'font-lock)
 (require 'outline)
 
+(defun vdiary-new-entry()
+  "Insert date string at current point."
+
+  (interactive)
+  (goto-char (point-max))
+  (insert (concat
+	   "\n"
+	   "* "
+	   (current-time-string)
+	   ": "
+	   ))
+)
+
 (defvar vdiary-mode-map nil)
 
 (if vdiary-mode-map
     nil
   (setq vdiary-mode-map outline-mode-map)
-  (define-key vdiary-mode-map "\^cd" 'vdiary-insert-datestamp)
-  (define-key vdiary-mode-map "\^ce" 'vdiary-start-entry)
+  (define-key vdiary-mode-map "\^ce" 'vdiary-new-entry)
   )
 
 ;;;###autoload
@@ -37,29 +49,5 @@
   (run-hooks 'vdiary-mode-hook)
   )
 
-(defun vdiary-insert-datestamp()
-  "Insert date string at current point."
-
-  (interactive)
-  (goto-char (point-max))
-  (let ((date-elements (split-string (current-time-string))))
-    (insert (concat
-	     "\n"
-	     "* "
-	     (nth 0 date-elements) " " ;; Day of week
-	     (nth 1 date-elements) " " ;; Month
-	     (nth 2 date-elements) " " ;; Date
-	     (nth 4 date-elements) " " ;; Year
-	     "\n"))
-    )
-)
-
-(defun vdiary-start-entry()
-  "Start adding new entry."
-
-  (interactive)
-  (goto-char (point-max))
-  (insert "\n" "** ")
-)
 
 (provide 'vdiary-mode)

@@ -40,8 +40,23 @@
 
 (setq my-lisp-dir (concat my-lib-dir directory-sep-string "lisp"))
 (if (file-accessible-directory-p my-lisp-dir)
-   (setq load-path (cons my-lisp-dir load-path))
+    (setq load-path (cons my-lisp-dir load-path))
 )
+
+;; Load subdirs.el in my lib/lisp directory if it exists
+(let
+    ((subdirs-file (concat my-lisp-dir directory-sep-string "subdirs.el"))
+     (default-directory my-lisp-dir)
+     )
+  (if (file-readable-p subdirs-file)
+      (load-file subdirs-file)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Set up exec path
+
+(add-to-list 'exec-path "/usr/local/bin" t)
+(add-to-list 'exec-path "/sw/bin" t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -102,7 +117,7 @@
 ;; Options
 ;;
 
-(defvar modify-menu is-xemacs
+(defvar modify-menu t
 	"Should we modify the toolbar menus?")
 
 ;; Don't do this under emacs until I get menubar localization fixed.
@@ -159,6 +174,39 @@
 
 ;; Don't use tabs by default
 (setq indent-tabs-mode nil)
+
+;; Prompt when asking files larger than this value
+(setq large-file-warning-threshold 100000000) ; 100 MB
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Desktop saving configuration
+
+;; Where to save desktop file
+(setq desktop-dirname home)
+
+;; Turn on desktop saving
+;;(desktop-save-mode t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; flyspell
+
+(add-hook 'text-mode-hook 'flyspell-mode)
+
+;;* flyspell comments and strings in programming modes
+;; From: "Stefan Monnier <foo @ acm.com>"
+(defun flyspell-generic-progmode-verify ()
+   "Used for `flyspell-generic-check-word-p' in programming modes."
+   (let ((f (get-text-property (point) 'face)))
+     (memq f '(font-lock-comment-face font-lock-string-face))))
+(defun flyspell-prog-mode ()
+   "Turn on `flyspell-mode' for comments and strings."
+   (interactive)
+   (setq flyspell-generic-check-word-p 'flyspell-generic-progmode-verify)
+   (flyspell-mode 1))
+(add-hook 'c-mode-common-hook         'flyspell-prog-mode t)
+(add-hook 'java-mode-common-hook         'flyspell-prog-mode t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -233,6 +281,9 @@
 
 (setq minibuffer-max-depth nil)
 
+;; Use visible bell instead of audible bell
+(setq visible-bell t)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Printer stuff
@@ -273,6 +324,16 @@
     ;; Does this do anything?
     (setq mac-command-key-is-meta t)
 )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Start GnuServ
+;;
+
+(if is-gnu-emacs
+    (require 'gnuserv-compat))
+(require 'gnuserv)
+(gnuserv-start)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;

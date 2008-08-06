@@ -10,6 +10,7 @@
 ;; Use perl mode for perl modules
 (setq auto-mode-alist
       (append '(("\\.pm$" . perl-mode)
+		("\\.pl$" . perl-mode)
 		)
 	      auto-mode-alist))
 

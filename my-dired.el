@@ -12,4 +12,5 @@
   (set-face-foreground 'dired-face-directory "blue")
 )
 
-(add-hook 'dired-mode-hook 'my-dired-mode-init)
+;; This is causing invalid face errors
+;;(add-hook 'dired-mode-hook 'my-dired-mode-init)

@@ -216,6 +216,7 @@
 (setq auto-mode-alist
       (append '(("\\.shtml$" . html-mode)
 		("buildall.conf" . sh-mode)
+		("\\.mhtml" . xml-mode)
 		("\\.wsdl" . xml-mode)
 		)
 	      auto-mode-alist))
@@ -331,9 +332,15 @@
 ;;
 
 (if is-gnu-emacs
-    (require 'gnuserv-compat))
-(require 'gnuserv)
-(gnuserv-start)
+    ;; For GNU Emacs use server-start and emacsclient
+    ;; To use gnuserv with gnu-emaacs I have used the following before
+    ;;(require 'gnuserv-compat))
+    (server-start)
+  ;; For XEmacs, use gnuserv-start and gnudoit
+  (progn
+    (require 'gnuserv)
+    (gnuserv-start))
+)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -346,3 +353,15 @@
 ;; End init.el
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(custom-set-variables
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(safe-local-variable-values (quote ((perl-indent-level . 4) (perl-indent-level . 2)))))
+(custom-set-faces
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ )

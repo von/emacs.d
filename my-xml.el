@@ -8,6 +8,7 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; XXX Add check to see if this file exists
 (load (concat my-lisp-dir directory-sep-string
 	      "nxml-mode-20041004" directory-sep-string
 	      "rng-auto.el"))

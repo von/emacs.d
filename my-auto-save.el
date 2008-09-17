@@ -11,7 +11,7 @@
     (progn
       (setq auto-save-directory (if is-ms-windows
 				    (expand-file-name "c:/temp")
-				  (expand-file-name "/usr/tmp/vwelch-autosaves/")
+				  (expand-file-name "/tmp/vwelch-autosaves/")
 				  )
 	    auto-save-directory-fallback auto-save-directory
 	    auto-save-hash-p nil

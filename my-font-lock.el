@@ -42,7 +42,8 @@
        ;; Standard text
        (set-face-foreground 'default "white")
        (set-face-background 'default "black")
-       (set-cursor-color "red")
+       (if (boundp 'set-cursour-color)
+	 (set-cursor-color "red"))
        ;;
        ;; Modeline
        (set-face-foreground 'modeline "black")

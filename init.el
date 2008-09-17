@@ -221,9 +221,11 @@
 		("buildall.conf" . sh-mode)
 		("\\.mhtml" . xml-mode)
 		("\\.wsdl" . xml-mode)
+		("\\.js\\'" . javascript-mode)
 		)
 	      auto-mode-alist))
 
+(autoload 'javascript-mode "javascript" nil t)
 
 (defvar gmake-directory ""
   "Directory to run gmake in.")

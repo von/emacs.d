@@ -25,7 +25,7 @@
 
        (require 'font-lock)
        )
-
+      
       (is-gnu-emacs
        (global-font-lock-mode 1)
        )
@@ -42,8 +42,7 @@
        ;; Standard text
        (set-face-foreground 'default "white")
        (set-face-background 'default "black")
-       (if (boundp 'set-cursour-color)
-	 (set-cursor-color "red"))
+       (set-cursor-color "red")
        ;;
        ;; Modeline
        (set-face-foreground 'modeline "black")

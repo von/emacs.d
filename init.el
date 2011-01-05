@@ -56,6 +56,7 @@
 ;; Set up exec path
 
 (add-to-list 'exec-path "/usr/local/bin" t)
+(add-to-list 'exec-path "/usr/local/git/bin" t)
 (add-to-list 'exec-path "/sw/bin" t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -193,6 +194,17 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
+;; Egg
+
+;; Hack: If I use the head-of-git version of egg without loading the
+;;       downloaded version first, it doesn't work. But if I do the
+;;       following, it does. The downloaded version has various bugs
+;;       so this gets me the best of both worlds.
+(require 'egg-orig)
+(require 'egg)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
 ;; flyspell
 
 (add-hook 'text-mode-hook 'flyspell-mode)
@@ -225,7 +237,7 @@
 		)
 	      auto-mode-alist))
 
-(autoload 'javascript-mode "javascript" nil t)
+;;(autoload 'javascript-mode "javascript" nil t)
 
 (defvar gmake-directory ""
   "Directory to run gmake in.")
@@ -358,6 +370,3 @@
 ;; End init.el
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(custom-set-variables
- '(load-home-init-file t t))
-(custom-set-faces)

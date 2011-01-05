@@ -96,6 +96,6 @@
       (error "Nothing to close"))))
 
     
-(define-key html-mode-map "\C-c]" 'django-close-tag)
+;;(define-key html-mode-map "\C-c]" 'django-close-tag)
 
 

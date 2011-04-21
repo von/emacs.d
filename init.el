@@ -51,6 +51,11 @@
   (if (file-readable-p subdirs-file)
       (load-file subdirs-file)))
 
+;; Add /usr/local/share/emacs/site-lisp/ if it exists
+(if (file-accessible-directory-p "/usr/local/share/emacs/site-lisp/")
+    (setq load-path (cons "/usr/local/share/emacs/site-lisp/" load-path))
+)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Set up exec path

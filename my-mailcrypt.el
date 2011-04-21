@@ -4,12 +4,17 @@
 ;; $Id$
 
 
-;; Preload mailcrypt so we can set the version
-(load-library "mailcrypt")
+(if
+    my-use-vm
+    (progn
+      ;; Preload mailcrypt so we can set the version
+      (load-library "mailcrypt")
 
-(mc-setversion "gpg")
+      (mc-setversion "gpg")
 
-(setq mc-gpg-path "/usr/local/bin/gpg")
+      (setq mc-gpg-path "/usr/local/bin/gpg")
 
-;; Encrypt all outgoing messages with my key
-(setq mc-encrypt-for-me t)
+      ;; Encrypt all outgoing messages with my key
+      (setq mc-encrypt-for-me t)
+      )
+  )

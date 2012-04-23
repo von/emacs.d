@@ -205,8 +205,8 @@
 ;;       downloaded version first, it doesn't work. But if I do the
 ;;       following, it does. The downloaded version has various bugs
 ;;       so this gets me the best of both worlds.
-(require 'egg-orig)
-(require 'egg)
+(require 'egg-orig)  ;; Not sure where from...
+(require 'egg)  ;; From https://github.com/bogolisk/egg
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;

@@ -19,6 +19,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Set up Emac's load path
+;;
+;; See: http://emacswiki.org/emacs/LoadPath
 
 ;; Use directory-file-name here to strip any trailing directory
 ;; separator
@@ -43,13 +45,9 @@
     (setq load-path (cons my-lisp-dir load-path))
 )
 
-;; Load subdirs.el in my lib/lisp directory if it exists
-(let
-    ((subdirs-file (concat my-lisp-dir directory-sep-string "subdirs.el"))
-     (default-directory my-lisp-dir)
-     )
-  (if (file-readable-p subdirs-file)
-      (load-file subdirs-file)))
+;; Add all subdirectories of my-lisp-dir to my load path
+(let ((default-directory my-lisp-dir))
+      (normal-top-level-add-subdirs-to-load-path))
 
 ;; Add /usr/local/share/emacs/site-lisp/ if it exists
 (if (file-accessible-directory-p "/usr/local/share/emacs/site-lisp/")

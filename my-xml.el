@@ -24,15 +24,4 @@
 
 (fset 'xml-mode 'nxml-mode)
 
-;; Add below if you would like to edit html files in nxml-mode.
-(fset 'html-mode 'nxml-mode)
-
-(add-hook 'nxml-mode-hook
-	  '(lambda ()
-	     (progn
-	       (require 'html-region)
-	       (define-key nxml-mode-map "\C-c\C-e" 'html-encode-region)
-	       (define-key nxml-mode-map "\C-ce" 'html-decode-region)	       
-	       )) t )
-
 

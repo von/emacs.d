@@ -8,9 +8,8 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; XXX Add check to see if this file exists
-(load (concat "nxml-mode-20041004" directory-sep-string
-	      "rng-auto.el"))
+;; Needs to be in loadpath
+(load "rng-auto.el")
 
 ;; From http://www.emacswiki.org/cgi-bin/wiki/NxmlMode
 (add-to-list 'auto-mode-alist

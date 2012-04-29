@@ -127,8 +127,6 @@
 	  )
 	)
 
-  (define-key hm--html-mode-map '(button3) 'html-popup-menu)
-
   (add-submenu nil html-pulldown-menu)
 
   ;; Making write-file-hooks buffer-local may already be done...
@@ -136,10 +134,13 @@
   (add-hook 'write-file-hooks 'html-update)
 
 
-  ;; XXX - doesn't work...
-  (define-key hm--html-mode-map "<" 'html-real-less-than)
-  (define-key hm--html-mode-map ">" 'html-real-greater-than)
-  (define-key hm--html-mode-map "&" 'html-real-ampersand)
+  ;; hm--html-mode-map not defined.
+
+  ;;(define-key hm--html-mode-map '(button3) 'html-popup-menu)
+  
+  ;;(define-key hm--html-mode-map "<" 'html-real-less-than)
+  ;;(define-key hm--html-mode-map ">" 'html-real-greater-than)
+  ;;(define-key hm--html-mode-map "&" 'html-real-ampersand)
 
   ;;(define-key hm--html-mode-map "return" 'html-enter)
 )

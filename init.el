@@ -49,6 +49,16 @@
 (let ((default-directory my-lisp-dir))
       (normal-top-level-add-subdirs-to-load-path))
 
+;; Add lib/emacs-<majorversion>
+(setq my-emacs-dir (concat my-lib-dir directory-sep-string
+			   "emacs-" (int-to-string emacs-major-version)))
+(if (file-accessible-directory-p my-emacs-dir)
+    (progn
+      (setq load-path (cons my-emacs-dir load-path))
+      (let ((default-directory my-emacs-dir))
+	(normal-top-level-add-subdirs-to-load-path))
+      ))
+
 ;; Add /usr/local/share/emacs/site-lisp/ if it exists
 (if (file-accessible-directory-p "/usr/local/share/emacs/site-lisp/")
     (setq load-path (cons "/usr/local/share/emacs/site-lisp/" load-path))

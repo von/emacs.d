@@ -209,12 +209,14 @@
 ;;
 ;; Egg
 
-;; Hack: If I use the head-of-git version of egg without loading the
-;;       downloaded version first, it doesn't work. But if I do the
-;;       following, it does. The downloaded version has various bugs
-;;       so this gets me the best of both worlds.
-(require 'egg-orig)  ;; Not sure where from...
-(require 'egg)  ;; From https://github.com/bogolisk/egg
+(if (eq emacs-major-version 22)
+    (require 'dominating-file))
+
+(require 'egg)
+
+;; Hack: Invoke egg-status instead of vc-create-tage
+;;       Not sure why this is needed
+(global-set-key "\C-xvs" 'egg-status)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;

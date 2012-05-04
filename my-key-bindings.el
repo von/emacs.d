@@ -7,6 +7,13 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
+;; Make command meta on the Mac
+
+(setq mac-command-key-is-meta t)
+(setq mac-command-modifier `meta)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
 ;; Change the control keys for exiting (C-x C-c is too easy to hit)
 ;;
 

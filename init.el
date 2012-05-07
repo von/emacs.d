@@ -214,9 +214,10 @@
 
 (require 'egg)
 
-;; Hack: Invoke egg-status instead of vc-create-tage
+;; Hack: Invoke egg- methods instead of vc- methods
 ;;       Not sure why this is needed
 (global-set-key "\C-xvs" 'egg-status)
+(global-set-key "\C-xvl" 'egg-log)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;

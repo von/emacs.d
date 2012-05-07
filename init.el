@@ -304,6 +304,10 @@
   (show-paren-mode t))
 )
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Look and feel of Emacs chrome
+
 ;; Display column number on modeline
 (cond
  ((boundp 'display-column-mode)
@@ -320,15 +324,9 @@
 )
 
 ;; Get rid of toolbar
-(cond
- ((boundp 'tool-bar-mode)
-  (tool-bar-mode nil))
+(tool-bar-mode -1)
 
- ((boundp 'set-default-toolbar-position)
-  (set-default-toolbar-position 'left)
-  (add-spec-list-to-specifier left-toolbar-width '((global (nil . 0)))))
- )
-
+;; I don't know what this does...
 (setq minibuffer-max-depth nil)
 
 ;; Use visible bell instead of audible bell

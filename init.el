@@ -332,6 +332,14 @@
 ;; Use visible bell instead of audible bell
 (setq visible-bell t)
 
+;; Set frame size
+(if window-system
+    (progn
+      (set-frame-size (selected-frame) 80 50)
+      (add-to-list 'default-frame-alist '(height . 50))
+      (add-to-list 'default-frame-alist '(width . 80))
+      ))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Printer stuff

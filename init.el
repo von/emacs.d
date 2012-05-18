@@ -239,10 +239,13 @@
 (add-to-list 'auto-mode-alist '("\\.mako\\'" . html-mode))
 (mmm-add-mode-ext-class 'html-mode "\\.mako\\'" 'mako)
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; flyspell
+;;
+;; Requests aspell. On a mac, install with:
+;;   sudo port install aspell
+;;   sudo port install aspell-dict-en 
 
 (add-hook 'text-mode-hook 'flyspell-mode)
 

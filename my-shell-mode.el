@@ -42,3 +42,17 @@
 	    ;; scroll to show max possible output
 	    (setq comint-scroll-show-maximum-output t)
 	    ))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Create shell if it doesn't exist or switch to it if it does
+
+(defun create-or-switch-to-shell()
+  (interactive)
+  (if (get-buffer "*shell*")
+      (switch-to-buffer "*shell*")
+    (shell)
+    )
+  )
+
+(global-set-key "\M-ss" 'create-or-switch-to-shell)

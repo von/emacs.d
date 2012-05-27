@@ -54,3 +54,16 @@
 ;;; Edebug is a source-level debugger for emacs-lisp programs.
 
 (define-key emacs-lisp-mode-map "\C-xx" 'edebug-defun)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Automatically compile elisp files when I save them.
+;; http://xahlee.org/emacs/organize_your_dot_emacs.html
+
+(defun auto-recompile-el-buffer ()
+  (interactive)
+  (when (and (eq major-mode 'emacs-lisp-mode)
+             (file-exists-p (byte-compile-dest-file buffer-file-name)))
+    (byte-compile-file buffer-file-name)))
+
+(add-hook 'after-save-hook 'auto-recompile-el-buffer)

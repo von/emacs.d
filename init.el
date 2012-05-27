@@ -19,6 +19,12 @@
 ;; Set up my load-path
 (load (expand-file-name "~/emacs-config/setup-load-path"))
 
+;; Compile all my configuration files that need it
+(byte-recompile-directory
+ (expand-file-name "~/emacs-config/")
+ 0 ;; Compile any not compiled
+ )
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Set up exec path

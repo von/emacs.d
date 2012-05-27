@@ -56,13 +56,13 @@
 (if (and (not (boundp 'emacs-major-version))
 	 (string-match "^[0-9]+" emacs-version))
     (setq emacs-major-version
-	  (string-to-int (substring emacs-version
-				    (match-beginning 0) (match-end 0)))))
+	  (string-to-number (substring emacs-version
+				       (match-beginning 0) (match-end 0)))))
 (if (and (not (boundp 'emacs-minor-version))
 	 (string-match "^[0-9]+\\.\\([0-9]+\\)" emacs-version))
     (setq emacs-minor-version
-	  (string-to-int (substring emacs-version
-				    (match-beginning 1) (match-end 1)))))
+	  (string-to-number (substring emacs-version
+				       (match-beginning 1) (match-end 1)))))
 
 ;; Get the short form of our hostname
 (setq hostname (if (eq (string-match "\\." (system-name)) 0)
@@ -72,9 +72,11 @@
       )
 
 (if is-x-windows (progn 
-		   (setq x-display (getenv "DISPLAY"))
-		   (setq x-display-host
-			 (substring x-display 0 (string-match ":" x-display)))
+		   (defvar x-display (getenv "DISPLAY")
+		     "X display")
+		   (defvar x-display-host
+			 (substring x-display 0 (string-match ":" x-display))
+			 "X host")
 		   (if (string= x-display-host "")
 		       (setq x-display-host (system-name)))
 		   )
@@ -130,7 +132,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Load all the my-*.el files in my config dir
-(mapcar
+(mapc
  (function
   (lambda (file)
     (load-file file)
@@ -275,15 +277,15 @@
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'post-forward)
 
-(if (boundp 'permanent-buffers-mode)
+(if (fboundp 'permanent-buffers-mode)
     ;; Turn on permanent buffers
     (permanent-buffers-mode t))
 
 ;; Turn on paren highlighting
 (cond
- ((boundp 'paren-set-mode)
+ ((fboundp 'paren-set-mode)
   (paren-set-mode 'paren))
- ((boundp 'show-paren-mode)
+ ((fboundp 'show-paren-mode)
   (show-paren-mode t))
 )
 
@@ -293,16 +295,16 @@
 
 ;; Display column number on modeline
 (cond
- ((boundp 'display-column-mode)
+ ((fboundp 'display-column-mode)
   (display-column-mode t))
 
- ((boundp 'column-number-mode)
+ ((fboundp 'column-number-mode)
   (column-number-mode t))
  )
 
 ;; Display line number on modeline
 (cond
- ((boundp 'line-number-mode)
+ ((fboundp 'line-number-mode)
   (line-number-mode t))
 )
 
@@ -367,7 +369,8 @@
   ;; For XEmacs, use gnuserv-start and gnudoit
   (progn
     (require 'gnuserv)
-    (gnuserv-start))
+    (if (fboundp 'gnuserv-start)
+	(gnuserv-start)))
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

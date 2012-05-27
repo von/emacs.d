@@ -1,17 +1,13 @@
 #!/bin/sh
+# Compile all my Emacs start up files.
+#
+# Kudos:
+# https://curiousprogrammer.wordpress.com/2009/03/04/compiling-at-emacs-startup/
 
-# Exit on error
-set -e
+emacs --batch \
+    -l setup-load-path.el \
+    --eval "(batch-byte-compile-if-not-done)" \
+    my-*.el setup-load-path.el init.el
 
-emacs="/Applications/DarwinPorts/Emacs.app/Contents/MacOS/Emacs"
+exit 0
 
-# Compile any files that aren't yet compiled
-for file in *.el; do
-  if test ! -e ${file}c ; then
-    echo "Compiling $file"
-    $emacs -batch -nw -u ${USER} -f batch-byte-recompile-directory .
-  fi
-done
-
-# Now have emacs recompile any that need it
-$emacs -batch -nw -u ${USER} -f batch-byte-recompile-directory .

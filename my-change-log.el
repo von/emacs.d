@@ -3,7 +3,7 @@
 ;;
 ;; $Id$
 
-(defun my-change-log-mode-init
+(defun my-change-log-mode-init()
   "My change-log mode init"
 
   ;; Turn on auto-fill

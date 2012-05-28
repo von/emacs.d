@@ -41,6 +41,8 @@
 	    (setq comint-scroll-to-bottom-on-output t)
 	    ;; scroll to show max possible output
 	    (setq comint-scroll-show-maximum-output t)
+	    ;; Ignore duplicates in history
+	    (setq comint-input-ignoredups t)
 	    ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

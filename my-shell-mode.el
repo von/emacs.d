@@ -27,6 +27,9 @@
 
 (defun my-shell-mode-hook()
   (define-key shell-mode-map "C-u" 'comint-delete-input)
+
+  ;; Unbind this from prefix command so I can type a capital C...
+  (define-key shell-mode-map "C" nil)
   
   ;; bind my special functions to the up and down keys in shell-mode
   (define-key shell-mode-map [up] 'ewd-comint-up)

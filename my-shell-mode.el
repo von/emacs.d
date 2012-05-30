@@ -25,25 +25,26 @@
 ;;
 ;; My shell-mode-hook
 
-(add-hook 'shell-mode-hook
-          (lambda ()
-	    (define-key shell-mode-map "C-u" 'comint-delete-input)
+(defun my-shell-mode-hook()
+  (define-key shell-mode-map "C-u" 'comint-delete-input)
+  
+  ;; bind my special functions to the up and down keys in shell-mode
+  (define-key shell-mode-map [up] 'ewd-comint-up)
+  (define-key shell-mode-map [down] 'ewd-comint-down)
+  
+  ;; Kudos for the following to
+  ;; http://snarfed.org/why_i_dont_run_shells_inside_emacs
+  ;; always insert at the bottom
+  (setq comint-scroll-to-bottom-on-input t)
+  ;; always add output at the bottom
+  (setq comint-scroll-to-bottom-on-output t)
+  ;; scroll to show max possible output
+  (setq comint-scroll-show-maximum-output t)
+  ;; Ignore duplicates in history
+  (setq comint-input-ignoredups t)
+)
 
-	    ;; bind my special functions to the up and down keys in shell-mode
-            (define-key shell-mode-map [up] 'ewd-comint-up)
-            (define-key shell-mode-map [down] 'ewd-comint-down)
-
-	    ;; Kudos for the following to
-	    ;; http://snarfed.org/why_i_dont_run_shells_inside_emacs
-	    ;; always insert at the bottom
-	    (setq comint-scroll-to-bottom-on-input t)
-	    ;; always add output at the bottom
-	    (setq comint-scroll-to-bottom-on-output t)
-	    ;; scroll to show max possible output
-	    (setq comint-scroll-show-maximum-output t)
-	    ;; Ignore duplicates in history
-	    (setq comint-input-ignoredups t)
-	    ))
+(add-hook 'shell-mode-hook 'my-shell-mode-hook)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;

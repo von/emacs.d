@@ -25,6 +25,12 @@
  0 ;; Compile any not compiled
  )
 
+;; And recompile any of my packages that need it
+(byte-recompile-directory
+ (expand-file-name "~/lib/lisp/")
+ 0 ;; Compile any not compiled
+ )
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Set up exec path

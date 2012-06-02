@@ -158,9 +158,6 @@
 ;; Do auto-fill in text mode
 (toggle-text-mode-auto-fill)
 
-;; Don't use tabs by default
-(setq indent-tabs-mode nil)
-
 ;; Prompt when asking files larger than this value
 (setq large-file-warning-threshold 100000000) ; 100 MB
 

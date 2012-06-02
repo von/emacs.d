@@ -118,10 +118,10 @@
   "Configure VM?")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;		Customization of Specific Packages		    ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+;;
 ;; Load all the my-*.el files in my config dir
+;;
+
 (mapc
  (function
   (lambda (file)
@@ -129,103 +129,6 @@
     ))
  (directory-files my-emacs-config-dir t "^my-.*\.el$" nil)
 )
-
-;; Don't indent all lines of paragraph like first
-(setq adaptive-fill-mode nil)
-
-;; Do auto-fill in text mode
-(toggle-text-mode-auto-fill)
-
-;; Prompt when asking files larger than this value
-(setq large-file-warning-threshold 100000000) ; 100 MB
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; Desktop saving configuration
-;;
-;; Saves all the open files when exiting for restoration on next start.
-
-;; Turn on desktop saving
-(desktop-save-mode t)
-
-;; Always save, don't ask
-(setq desktop-save t)
-
-;; Where to save desktop file
-(setq desktop-dirname home)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; Egg
-
-(if (eq emacs-major-version 22)
-    (require 'dominating-file))
-
-(require 'egg)
-
-;; Hack: Invoke egg- methods instead of vc- methods
-;;       Not sure why this is needed
-(global-set-key "\C-xvs" 'egg-status)
-(global-set-key "\C-xvl" 'egg-log)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; Markdown
-
-(autoload 'markdown-mode "markdown-mode.el"
-  "Major mode for editing Markdown files" t)
-(setq auto-mode-alist
-      (cons '("\\.md" . markdown-mode) auto-mode-alist))
-(set-variable 'markdown-command "Markdown.pl")
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; Mako
-;; https://bitbucket.org/pjenvey/mmm-mako
-
-(require 'mmm-mako)
-
-(add-to-list 'auto-mode-alist '("\\.mako\\'" . html-mode))
-(mmm-add-mode-ext-class 'html-mode "\\.mako\\'" 'mako)
-
-;; XXX - Mako mode doesn't quite work, Emacs doesn't recognize
-;;       opening Mako blocks and gets confused complaining about
-;;       mismatched tags.
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; flyspell
-;;
-;; Requests aspell. On a mac, install with:
-;;   sudo port install aspell
-;;   sudo port install aspell-dict-en
-
-(add-hook 'text-mode-hook 'flyspell-mode)
-
-;;* flyspell comments and strings in programming modes
-;; From: "Stefan Monnier <foo @ acm.com>"
-
-(defun flyspell-generic-progmode-verify ()
-   "Used for `flyspell-generic-check-word-p' in programming modes."
-   (let ((f (get-text-property (point) 'face)))
-     (memq f '(font-lock-comment-face font-lock-string-face))))
-
-(defun flyspell-prog-mode ()
-   "Turn on `flyspell-mode' for comments and strings."
-   (interactive)
-   (setq flyspell-generic-check-word-p 'flyspell-generic-progmode-verify)
-   (flyspell-mode 1))
-
-(add-hook 'c-mode-common-hook         'flyspell-prog-mode t)
-(add-hook 'java-mode-common-hook         'flyspell-prog-mode t)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; ipython
-;;
-
-;; This breaks tab indentation in nxml
-;;(require 'ipython)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -237,54 +140,18 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;; Dictionary support
-
-(load "dictionary-init")
-
-(global-set-key "\C-cs" 'dictionary-search)
-(global-set-key "\C-cm" 'dictionary-match-words)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; MS Windows Stuff
+;; Load platform-specific configuration
 ;;
 
+;; MS Windows
 (if is-ms-windows
-    (progn
-      (setq completion-ignore-case t)
-      ;; This also effects email alias completions
-      ;;(setq completion-regexp-list
-      ;;	    (append '("regex")
-      ;;		    completion-regexp-list))
-      ))
+    (load (expand-file-name "~/emacs-config/ms-windows"))
+  )
 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; Start GnuServ
-;;
-
+;; GNU Emacs
 (if is-gnu-emacs
-    ;; For GNU Emacs use server-start and emacsclient
-    ;; To use gnuserv with gnu-emaacs I have used the following before
-    ;;(require 'gnuserv-compat))
-    (server-start)
-  ;; For XEmacs, use gnuserv-start and gnudoit
-  (progn
-    (require 'gnuserv)
-    (if (fboundp 'gnuserv-start)
-	(gnuserv-start)))
-)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; Load nxhtml mode
-
-(load "nxhtml/autostart.el")
-
-;; Stop nxhtml from messing with my background
-;; Kudos: http://stackoverflow.com/a/3042760/197789
-(setq mumamo-background-colors nil)
+    (load (expand-file-name "~/emacs-config/ms-windows"))
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;

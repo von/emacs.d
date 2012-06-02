@@ -7,6 +7,9 @@
 ;; Clean up trailing whitespace and tabs
 (global-set-key "\C-cw" 'whitespace-cleanup)
 
+;; Turn on whitespace display
+(global-set-key "\C-cW" 'whitespace-mode)
+
 (setq-default
 
  ;; Show trailing whitesapce

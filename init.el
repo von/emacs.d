@@ -93,29 +93,6 @@
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; Options
-;;
-
-(defvar modify-menu t
-	"Should we modify the toolbar menus?")
-
-(defvar my-use-vm nil
-  "Configure VM?")
-
-;; Don't do this under emacs until I get menubar localization fixed.
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; Enable the commands `narrow-to-region' ("C-x n n") and
-;; `eval-expression' ("M-ESC", or "ESC ESC").  Both are useful
-;; commands, but they can be confusing for a new user, so they're
-;; disabled by default.
-
-(put 'narrow-to-region 'disabled nil)
-(put 'eval-expression 'disabled nil)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;			Support routines
@@ -129,12 +106,16 @@
       (set-buffer-menubar (copy-sequence current-menubar)))
 )
 
-(defun set-buffer-frame-title-format(format)
-  "Set the frame title for this buffer."
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Options
+;;
 
-  (make-local-variable 'frame-title-format)
-  (setq frame-title-format format)
-)
+(defvar modify-menu t
+	"Should we modify the toolbar menus?")
+
+(defvar my-use-vm nil
+  "Configure VM?")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;		Customization of Specific Packages		    ;;
@@ -251,98 +232,8 @@
 ;; Miscellaneous stuff
 ;;
 
-(setq auto-mode-alist
-      (append '(("\\.shtml$" . html-mode)
-		("buildall.conf" . sh-mode)
-		("\\.mhtml" . xml-mode)
-		("\\.wsdl" . xml-mode)
-		("\\.js\\'" . javascript-mode)
-		)
-	      auto-mode-alist))
-
-;;(autoload 'javascript-mode "javascript" nil t)
-
-(defvar gmake-directory ""
-  "Directory to run gmake in.")
-
-(defun compile-with-gmake(dir)
-  "Run compile with gmake in some directory."
-
-  (interactive
-   (list (read-directory-name "gmake directory: " gmake-directory)))
-
-  (setq gmake-directory dir)
-  (make-local-variable 'compile-command)
-  (setq compile-command (concat "(cd " gmake-directory "; gmake -k )"))
-  (compile compile-command)
-)
-
-(global-set-key "\C-\M-m" 'compile-with-gmake)
-
-;; Put directory component in buffer names
-(require 'uniquify)
-(setq uniquify-buffer-name-style 'post-forward)
-
-(if (fboundp 'permanent-buffers-mode)
-    ;; Turn on permanent buffers
-    (permanent-buffers-mode t))
-
-;; Turn on paren highlighting
-(cond
- ((fboundp 'paren-set-mode)
-  (paren-set-mode 'paren))
- ((fboundp 'show-paren-mode)
-  (show-paren-mode t))
-)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; Look and feel of Emacs chrome
-
-;; Display column number on modeline
-(cond
- ((fboundp 'display-column-mode)
-  (display-column-mode t))
-
- ((fboundp 'column-number-mode)
-  (column-number-mode t))
- )
-
-;; Display line number on modeline
-(cond
- ((fboundp 'line-number-mode)
-  (line-number-mode t))
-)
-
-;; Get rid of toolbar
-(tool-bar-mode -1)
-
-;; I don't know what this does...
-(setq minibuffer-max-depth nil)
-
-;; Use visible bell instead of audible bell
-(setq visible-bell t)
-
-;; Set frame size
-(if window-system
-    (progn
-      (set-frame-size (selected-frame) 80 50)
-      (add-to-list 'default-frame-alist '(height . 50))
-      (add-to-list 'default-frame-alist '(width . 80))
-      ))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; Printer stuff
-
-(setq ps-print-color-p nil)
-(setq printer-name "//cab-server/clw14 basement")
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; Copy on select
-
-(setq x-select-enable-clipboard t)
+;; Prompt when loading files larger than this value
+(setq large-file-warning-threshold 100000000) ; 100 MB
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;

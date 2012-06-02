@@ -1,8 +1,5 @@
 ;;; -*- Mode: Emacs-Lisp -*-
 ;;;
-;;; $Id$
-;;;
-
 ;;; This file is meant to be used as .emacs and load the rest of my
 ;;; configuration.
 ;;;
@@ -66,33 +63,33 @@
 ;;; it much easier to conditionalize on the emacs version.
 
 (if (and (not (boundp 'emacs-major-version))
-	 (string-match "^[0-9]+" emacs-version))
+         (string-match "^[0-9]+" emacs-version))
     (setq emacs-major-version
-	  (string-to-number (substring emacs-version
-				       (match-beginning 0) (match-end 0)))))
+          (string-to-number (substring emacs-version
+                                       (match-beginning 0) (match-end 0)))))
 (if (and (not (boundp 'emacs-minor-version))
-	 (string-match "^[0-9]+\\.\\([0-9]+\\)" emacs-version))
+         (string-match "^[0-9]+\\.\\([0-9]+\\)" emacs-version))
     (setq emacs-minor-version
-	  (string-to-number (substring emacs-version
-				       (match-beginning 1) (match-end 1)))))
+          (string-to-number (substring emacs-version
+                                       (match-beginning 1) (match-end 1)))))
 
 ;; Get the short form of our hostname
 (setq hostname (if (eq (string-match "\\." (system-name)) 0)
-		   (system-name)
-		 (substring (system-name) 0 (string-match "\\." (system-name)))
-		 )
+                   (system-name)
+                 (substring (system-name) 0 (string-match "\\." (system-name)))
+                 )
       )
 
-(if is-x-windows (progn 
-		   (defvar x-display (getenv "DISPLAY")
-		     "X display")
-		   (defvar x-display-host
-			 (substring x-display 0 (string-match ":" x-display))
-			 "X host")
-		   (if (string= x-display-host "")
-		       (setq x-display-host (system-name)))
-		   )
-  
+(if is-x-windows (progn
+                   (defvar x-display (getenv "DISPLAY")
+                     "X display")
+                   (defvar x-display-host
+                         (substring x-display 0 (string-match ":" x-display))
+                         "X host")
+                   (if (string= x-display-host "")
+                       (setq x-display-host (system-name)))
+                   )
+
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -110,7 +107,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;; Enable the commands `narrow-to-region' ("C-x n n") and 
+;; Enable the commands `narrow-to-region' ("C-x n n") and
 ;; `eval-expression' ("M-ESC", or "ESC ESC").  Both are useful
 ;; commands, but they can be confusing for a new user, so they're
 ;; disabled by default.
@@ -220,7 +217,7 @@
 ;;
 ;; Requests aspell. On a mac, install with:
 ;;   sudo port install aspell
-;;   sudo port install aspell-dict-en 
+;;   sudo port install aspell-dict-en
 
 (add-hook 'text-mode-hook 'flyspell-mode)
 
@@ -270,8 +267,8 @@
 
 (defun compile-with-gmake(dir)
   "Run compile with gmake in some directory."
-  
-  (interactive 
+
+  (interactive
    (list (read-directory-name "gmake directory: " gmake-directory)))
 
   (setq gmake-directory dir)

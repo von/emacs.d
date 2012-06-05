@@ -42,6 +42,9 @@
 (add-to-list 'exec-path "/usr/local/git/bin" t)
 (add-to-list 'exec-path "/sw/bin" t)
 
+;; Copy exec-path back to PATH so subshells use it as well
+(setenv "PATH" (mapconcat 'identity exec-path ":"))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Define some basic functions for determining things about

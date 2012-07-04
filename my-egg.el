@@ -6,9 +6,8 @@
 (if (eq emacs-major-version 22)
     (require 'dominating-file))
 
-(require 'egg)
+;; Change egg prefix from "C-x v"
+;; This must be set before egg is loaded to have affect.
+;;(custom-set-variables '(egg-mode-key-prefix "C-c v"))
 
-;; Hack: Invoke egg- methods instead of vc- methods
-;;       Not sure why this is needed
-(global-set-key "\C-xvs" 'egg-status)
-(global-set-key "\C-xvl" 'egg-log)
+(require 'egg)

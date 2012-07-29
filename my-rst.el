@@ -2,6 +2,8 @@
 ;;; My rst (restructed text) mode configuration
 ;;;
 
+(require 'rst)  ;; So faces are available to edit.
+
 ;; Get rid of grey background and use bright foreground instead
 (set-face-background 'rst-level-1-face "black")
 (set-face-foreground 'rst-level-1-face "red")

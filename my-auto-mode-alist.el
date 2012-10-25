@@ -8,5 +8,6 @@
                 ("\\.mhtml" . xml-mode)
                 ("\\.wsdl" . xml-mode)
                 ("\\.js\\'" . javascript-mode)
+                ("\\.zsh\\'" . shell-script-mode)
                 )
               auto-mode-alist))

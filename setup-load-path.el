@@ -11,6 +11,7 @@
   "My home directory.")
 
 ;; Prepend load stuff...
+(unless (boundp 'directory-sep-char) (setq directory-sep-char ?/))
 (setq directory-sep-string (char-to-string directory-sep-char))
 
 (setq my-lib-dir (concat home directory-sep-string "lib"))
@@ -56,9 +57,6 @@
 ;; separator
 (defvar home (directory-file-name (getenv "HOME"))
   "My home directory.")
-
-;; Prepend load stuff...
-(setq directory-sep-string (char-to-string directory-sep-char))
 
 (setq my-lib-dir (concat home directory-sep-string "lib"))
 

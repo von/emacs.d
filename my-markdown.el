@@ -9,4 +9,5 @@
 (setq auto-mode-alist
       (cons '("\\.md" . markdown-mode) auto-mode-alist))
 
-(set-variable 'markdown-command "Markdown.pl")
+;; markdown as installed by 'brew install markdown'
+(set-variable 'markdown-command "markdown")

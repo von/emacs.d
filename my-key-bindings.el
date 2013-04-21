@@ -45,13 +45,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Allow me to enter a C-x c for extended command since I can't
-;; use meta on the PC
+;; use meta on the PC or on the Mac in a terminal window
 
 (global-set-key "\C-xc" 'execute-extended-command)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;;				   
+;;
 
 (global-set-key "\eg" 'goto-line)
 (global-set-key "\em" 'compile)

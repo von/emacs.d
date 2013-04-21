@@ -57,6 +57,7 @@
 (global-set-key "\em" 'compile)
 (global-set-key "\C-xp" 'set-fill-prefix)
 (global-set-key "\e&" 'query-replace-regexp)
+(global-set-key "\C-xf" 'eval-defun)
 
 (global-set-key "\e#" 'fill-paragraph)
 

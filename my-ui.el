@@ -12,6 +12,9 @@
   "Initialize a non-graphic frame"
   ;; Get rid of toolbar
   (tool-bar-mode -1)
+  ;; Make 'delete' key delete backwars
+  ;; Kudos: http://emacswiki.org/emacs/AquamacsEmacsCompatibilitySettings
+  (normal-erase-is-backspace-mode nil)
 )
 
 (defun my-frame-init(new-frame)

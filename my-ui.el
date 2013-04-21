@@ -71,3 +71,9 @@
  ((fboundp 'show-paren-mode)
   (show-paren-mode t))
 )
+
+;; Turn off tabbar in Aquamacs
+(cond
+ ((fboundp 'tabbar-mode)
+  (tabbar-mode -1))
+)

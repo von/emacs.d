@@ -15,6 +15,10 @@
   ;; Make 'delete' key delete backwars
   ;; Kudos: http://emacswiki.org/emacs/AquamacsEmacsCompatibilitySettings
   (normal-erase-is-backspace-mode nil)
+  ;; Make modeline inverted (might be a better way?)
+  (set-face-foreground 'modeline "white" new-frame)
+  (set-face-background 'modeline "black" new-frame)
+
 )
 
 (defun my-frame-init(new-frame)

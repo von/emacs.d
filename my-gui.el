@@ -2,6 +2,29 @@
 ;;; Look and feel of the Emacs GUI
 ;;;
 
+(defun my-graphic-frame-init(new-frame)
+  "Initialize a graphic frame"
+  ;; Get rid of toolbar
+  (tool-bar-mode -1)
+)
+
+(defun my-terminal-frame-init(new-frame)
+  "Initialize a non-graphic frame"
+  ;; Get rid of toolbar
+  (tool-bar-mode -1)
+)
+
+(defun my-frame-init(new-frame)
+  "Initialize a frame"
+  ;; Kudos: https://lists.gnu.org/archive/html/help-gnu-emacs/2011-11/msg00253.html
+  (select-frame new-frame)
+  ;; Graphical vs terminal frame
+  ;; Kudos: http://stackoverflow.com/a/5801740/197789
+  (if (display-graphic-p) (my-graphic-frame-init new-frame)
+    (my-terminal-frame-init new-frame))
+)
+(add-hook 'after-make-frame-functions 'my-frame-init)
+
 ;; Put directory component in buffer names
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'post-forward)

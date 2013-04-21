@@ -1,5 +1,5 @@
 ;;;
-;;; Look and feel of the Emacs GUI
+;;; Look and feel of the Emacs UI
 ;;;
 
 (defun my-graphic-frame-init(new-frame)

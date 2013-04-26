@@ -147,6 +147,11 @@
 ;; Prompt when loading files larger than this value
 (setq large-file-warning-threshold 100000000) ; 100 MB
 
+;; Completion with ido
+;; http://emacswiki.org/emacs/InteractivelyDoThings
+(require 'ido)
+(ido-mode t)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Load platform-specific configuration
